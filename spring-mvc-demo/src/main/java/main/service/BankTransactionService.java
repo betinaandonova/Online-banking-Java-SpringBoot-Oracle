@@ -6,15 +6,27 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import main.model.BankTransaction;
+import main.repository.BankTransactionRepository;
+import java.util.List;
 
 @Service
 public class BankTransactionService {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    private final BankTransactionRepository bankTransactionRepository;
+
+    public BankTransactionService(BankTransactionRepository bankTransactionRepository) {
+        this.bankTransactionRepository = bankTransactionRepository;
+    }
+
+    // ======================
+    // CRUD (PROCEDURES)
+    // ======================
 
     @Transactional
     public void insertTransaction(Long employeeId,
@@ -89,7 +101,6 @@ public class BankTransactionService {
 
     @Transactional
     public void deleteTransaction(Long bankTransactionId) {
-
         StoredProcedureQuery query = entityManager
                 .createStoredProcedureQuery("BANK_TRANS_DEL");
 
@@ -97,5 +108,38 @@ public class BankTransactionService {
         query.setParameter("p_bank_transaction_id", bankTransactionId);
 
         query.execute();
+    }
+
+    // ======================
+    // READ (REPOSITORY)
+    // ======================
+
+    public List<BankTransaction> findAll() {
+        return bankTransactionRepository.findAll();
+    }
+
+    public BankTransaction findById(Long id) {
+        return bankTransactionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Transaction not found with id: " + id));
+    }
+
+    public List<BankTransaction> findByAccountId(Long accountId) {
+        return bankTransactionRepository.findByAccount_Id(accountId);
+    }
+
+    public List<BankTransaction> findByTransactionTypeId(Long transactionTypeId) {
+        return bankTransactionRepository.findByTransactionType_Id(transactionTypeId);
+    }
+
+    public List<BankTransaction> findByCurrencyId(Long currencyId) {
+        return bankTransactionRepository.findByCurrency_Id(currencyId);
+    }
+
+    public List<BankTransaction> findByTransactionDate(LocalDate transactionDate) {
+        return bankTransactionRepository.findByTransactionDate(transactionDate);
+    }
+
+    public List<BankTransaction> findByTransactionDateBetween(LocalDate startDate, LocalDate endDate) {
+        return bankTransactionRepository.findByTransactionDateBetween(startDate, endDate);
     }
 }

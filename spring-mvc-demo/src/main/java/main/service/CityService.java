@@ -4,14 +4,28 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
+import main.model.City;
+import main.repository.CityRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class CityService {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    private final CityRepository cityRepository;
+
+    public CityService(CityRepository cityRepository) {
+        this.cityRepository = cityRepository;
+    }
+
+    // ======================
+    // CRUD (PROCEDURES)
+    // ======================
 
     @Transactional
     public void insertCity(String cityName, Long countryId) {
@@ -52,9 +66,25 @@ public class CityService {
                 .createStoredProcedureQuery("CITY_DEL");
 
         query.registerStoredProcedureParameter("p_city_id", Long.class, ParameterMode.IN);
-
         query.setParameter("p_city_id", cityId);
 
         query.execute();
+    }
+
+    // ======================
+    // READ (REPOSITORY)
+    // ======================
+
+    public List<City> findAll() {
+        return cityRepository.findAll();
+    }
+
+    public City findById(Long id) {
+        return cityRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("City not found with id: " + id));
+    }
+
+    public List<City> findByCountryId(Long countryId) {
+        return cityRepository.findByCountry_Id(countryId);
     }
 }

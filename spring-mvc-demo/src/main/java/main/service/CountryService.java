@@ -4,17 +4,28 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
+import main.model.Country;
+import main.repository.CountryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CountryService {
 
+    private final CountryRepository countryRepository;
     @PersistenceContext
     private EntityManager entityManager;
 
+    public CountryService(CountryRepository countryRepository) {
+        this.countryRepository = countryRepository;
+    }
+
     @Transactional
-    public void insertCountry(String countryName) {
+    public void insertCountry(String countryName)
+    {
 
         StoredProcedureQuery query = entityManager
                 .createStoredProcedureQuery("COUNTRY_INS");
@@ -27,7 +38,8 @@ public class CountryService {
     }
 
     @Transactional
-    public void updateCountry(Long countryId, String countryName) {
+    public void updateCountry(Long countryId, String countryName)
+    {
 
         StoredProcedureQuery query = entityManager
                 .createStoredProcedureQuery("COUNTRY_UPD");
@@ -42,7 +54,8 @@ public class CountryService {
     }
 
     @Transactional
-    public void deleteCountry(Long countryId) {
+    public void deleteCountry(Long countryId)
+    {
 
         StoredProcedureQuery query = entityManager
                 .createStoredProcedureQuery("COUNTRY_DEL");
@@ -53,4 +66,20 @@ public class CountryService {
 
         query.execute();
     }
+
+    // ======================
+    // READ (REPOSITORY)
+    // ======================
+
+    public Country findById(Long id)
+    {
+        return countryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Country not found with id: " + id));
+    }
+
+    public List<Country> findByCountryName(String countryName)
+    {
+        return countryRepository.findByCountryName(countryName);
+    }
+
 }

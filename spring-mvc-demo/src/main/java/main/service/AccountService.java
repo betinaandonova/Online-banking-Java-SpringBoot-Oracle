@@ -4,16 +4,29 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
+import main.model.Account;
+import main.repository.AccountRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class AccountService {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    private final AccountRepository accountRepository;
+
+    public AccountService(AccountRepository accountRepository) {
+        this.accountRepository = accountRepository;
+    }
+
+    // ======================
+    // CRUD (PROCEDURES)
+    // ======================
 
     @Transactional
     public void insertAccount(Long clientId,
@@ -68,5 +81,27 @@ public class AccountService {
         query.setParameter("p_account_id", accountId);
 
         query.execute();
+    }
+
+    // ======================
+    // READ (REPOSITORY)
+    // ======================
+
+    public List<Account> findAll() {
+        return accountRepository.findAll();
+    }
+
+    public Account findById(Long id) {
+        return accountRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Account not found with id: " + id));
+    }
+
+    public List<Account> findByClientId(Long clientId) {
+        return accountRepository.findByClientId(clientId);
+    }
+
+    public Account findByIban(String iban) {
+        return accountRepository.findByIban(iban)
+                .orElseThrow(() -> new RuntimeException("Account not found with IBAN: " + iban));
     }
 }
