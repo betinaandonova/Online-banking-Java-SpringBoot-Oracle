@@ -1,4 +1,4 @@
-package main.procedure;
+package main.service;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Service
-public class ExchangeRateProcedureService {
+public class ExchangeRateService {
 
     @PersistenceContext
     private EntityManager entityManager;

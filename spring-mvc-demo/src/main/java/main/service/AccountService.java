@@ -1,4 +1,4 @@
-package main.procedure;
+package main.service;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 
 @Service
-public class AccountProcedureService {
+public class AccountService {
 
     @PersistenceContext
     private EntityManager entityManager;

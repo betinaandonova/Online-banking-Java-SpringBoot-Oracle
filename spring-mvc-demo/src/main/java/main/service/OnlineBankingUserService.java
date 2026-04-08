@@ -1,4 +1,4 @@
-package main.procedure;
+package main.service;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class OnlineBankingUserProcedureService {
+public class OnlineBankingUserService {
 
     @PersistenceContext
     private EntityManager entityManager;
