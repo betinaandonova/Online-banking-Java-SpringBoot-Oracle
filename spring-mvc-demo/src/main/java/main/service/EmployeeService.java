@@ -72,4 +72,10 @@ public class EmployeeService {
 
         query.execute();
     }
+
+    // ======================
+    // READ (REPOSITORY)
+    // ======================
+
+
 }

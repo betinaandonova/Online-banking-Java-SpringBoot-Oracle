@@ -85,4 +85,9 @@ public class OnlineBankingUserService {
                                    String passwordHash) {
         insertOnlineUser(null, employeeId, username, passwordHash);
     }
+
+    // ======================
+    // READ (REPOSITORY)
+    // ======================
+
 }

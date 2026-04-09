@@ -53,4 +53,9 @@ public class TransactionTypeService {
 
         query.execute();
     }
+
+    // ======================
+    // READ (REPOSITORY)
+    // ======================
+
 }

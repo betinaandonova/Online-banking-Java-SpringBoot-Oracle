@@ -68,4 +68,9 @@ public class ExchangeRateService {
 
         query.execute();
     }
+
+    // ======================
+    // READ (REPOSITORY)
+    // ======================
+
 }

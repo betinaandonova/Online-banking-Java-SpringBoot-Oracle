@@ -4,17 +4,27 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
+import main.model.Country;
+import main.model.CurrencyType;
+import main.repository.CurrencyTypeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CurrencyTypeService {
 
+    private final CurrencyTypeRepository currencyTypeRepository;
     @PersistenceContext
     private EntityManager entityManager;
 
+    public CurrencyTypeService(CurrencyTypeRepository currencyTypeRepository)
+    {
+        this.currencyTypeRepository = currencyTypeRepository;
+    }
+
     @Transactional
-    public void insertCurrencyType(String currencyShort, String currency) {
+    public void insertCurrencyType(String currencyShort, String currency)
+    {
 
         StoredProcedureQuery query = entityManager
                 .createStoredProcedureQuery("CURRENCY_INS");
@@ -29,7 +39,8 @@ public class CurrencyTypeService {
     }
 
     @Transactional
-    public void updateCurrencyType(Long currencyId, String currencyShort, String currency) {
+    public void updateCurrencyType(Long currencyId, String currencyShort, String currency)
+    {
 
         StoredProcedureQuery query = entityManager
                 .createStoredProcedureQuery("CURRENCY_UPD");
@@ -46,7 +57,8 @@ public class CurrencyTypeService {
     }
 
     @Transactional
-    public void deleteCurrencyType(Long currencyId) {
+    public void deleteCurrencyType(Long currencyId)
+    {
 
         StoredProcedureQuery query = entityManager
                 .createStoredProcedureQuery("CURRENCY_DEL");
@@ -56,5 +68,25 @@ public class CurrencyTypeService {
         query.setParameter("p_currency_id", currencyId);
 
         query.execute();
+    }
+
+    // ======================
+    // READ (REPOSITORY)
+    // ======================
+
+    public CurrencyType findById(Long id)
+    {
+        return currencyTypeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Currency not found with id: " + id));
+    }
+
+    public CurrencyType findByShort( String currencyShort){
+        return currencyTypeRepository.findCurrencyTypeByCurrencyShort(currencyShort)
+                .orElseThrow(() ->  new RuntimeException(currencyShort));
+    }
+
+    public CurrencyType findByCurrency(String currency){
+        return currencyTypeRepository.findCurrencyTypeByCurrency(currency)
+                .orElseThrow(() -> new RuntimeException(currency));
     }
 }
