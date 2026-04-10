@@ -8,9 +8,7 @@ import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
-    List<Account> findByClient_Id(Long clientId);
-
     Optional<Account> findByIban(String iban);
 
-    List<Account> findByClientId(Long clientId);
+    List<Account> findByClient_Id(Long clientId);
 }

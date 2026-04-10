@@ -4,17 +4,25 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
+import main.model.ExchangeRate;
+import main.repository.ExchangeRateRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class ExchangeRateService {
 
+    private final ExchangeRateRepository exchangeRateRepository;
     @PersistenceContext
     private EntityManager entityManager;
+
+    public ExchangeRateService(ExchangeRateRepository exchangeRateRepository) {
+        this.exchangeRateRepository = exchangeRateRepository;
+    }
 
     @Transactional
     public void insertExchangeRate(Long currencyId,
@@ -73,4 +81,22 @@ public class ExchangeRateService {
     // READ (REPOSITORY)
     // ======================
 
+    public List<ExchangeRate> findAll() {
+        return exchangeRateRepository.findAll();
+    }
+
+
+    public List<ExchangeRate> findByRateDate(LocalDate rateDate) {
+        return exchangeRateRepository.findByRateDate(rateDate);
+    }
+
+    public ExchangeRate findByCurrencyIdAndRateDate(Long currencyId, LocalDate rateDate) {
+        return exchangeRateRepository.findByCurrency_IdAndRateDate(currencyId, rateDate)
+                .orElseThrow(() -> new RuntimeException(
+                        "Exchange rate not found for currency id " + currencyId + " and date " + rateDate));
+    }
+
+    public List<ExchangeRate> findByRateDateBetween(LocalDate startDate, LocalDate endDate) {
+        return exchangeRateRepository.findByRateDateBetween(startDate, endDate);
+    }
 }

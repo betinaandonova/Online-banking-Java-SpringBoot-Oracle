@@ -124,7 +124,7 @@ public class BankTransactionService {
     }
 
     public List<BankTransaction> findByAccountId(Long accountId) {
-        return bankTransactionRepository.findByAccount_Id(accountId);
+        return bankTransactionRepository.findByAccount_IdOrderByTransactionDateDesc(accountId);
     }
 
     public List<BankTransaction> findByTransactionTypeId(Long transactionTypeId) {

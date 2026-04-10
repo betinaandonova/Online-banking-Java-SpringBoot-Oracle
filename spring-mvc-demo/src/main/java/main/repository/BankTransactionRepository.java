@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface BankTransactionRepository extends JpaRepository<BankTransaction, Long> {
 
-    List<BankTransaction> findByAccount_Id(Long accountId);
+    List<BankTransaction> findByAccount_IdOrderByTransactionDateDesc(Long accountId);
 
     List<BankTransaction> findByTransactionType_Id(Long transactionTypeId);
 

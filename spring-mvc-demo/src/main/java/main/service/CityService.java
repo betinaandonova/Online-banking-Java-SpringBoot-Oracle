@@ -84,6 +84,11 @@ public class CityService {
                 .orElseThrow(() -> new RuntimeException("City not found with id: " + id));
     }
 
+    public List<City> findByName(String name)
+    {
+        return cityRepository.findByCityNameContainingIgnoreCase(name);
+    }
+
     public List<City> findByCountryId(Long countryId) {
         return cityRepository.findByCountry_Id(countryId);
     }

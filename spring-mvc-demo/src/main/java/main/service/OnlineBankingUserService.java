@@ -4,14 +4,23 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
+import main.model.OnlineBankingUser;
+import main.repository.OnlineBankingUserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class OnlineBankingUserService {
 
+    private final OnlineBankingUserRepository onlineBankingUserRepository;
     @PersistenceContext
     private EntityManager entityManager;
+
+    public OnlineBankingUserService(OnlineBankingUserRepository onlineBankingUserRepository) {
+        this.onlineBankingUserRepository = onlineBankingUserRepository;
+    }
 
     @Transactional
     public void insertOnlineUser(Long clientId,
@@ -90,4 +99,27 @@ public class OnlineBankingUserService {
     // READ (REPOSITORY)
     // ======================
 
+    public List<OnlineBankingUser> findAll() {
+        return onlineBankingUserRepository.findAll();
+    }
+
+    public OnlineBankingUser findById(Long id) {
+        return onlineBankingUserRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+    }
+
+    public OnlineBankingUser findByUsername(String username) {
+        return onlineBankingUserRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
+    }
+
+    public OnlineBankingUser findByClientId(Long clientId) {
+        return onlineBankingUserRepository.findByClient_Id(clientId)
+                .orElseThrow(() -> new RuntimeException("User not found for client id: " + clientId));
+    }
+
+    public OnlineBankingUser findByEmployeeId(Long employeeId) {
+        return onlineBankingUserRepository.findByEmployee_Id(employeeId)
+                .orElseThrow(() -> new RuntimeException("User not found for employee id: " + employeeId));
+    }
 }

@@ -10,6 +10,9 @@ import main.repository.CurrencyTypeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class CurrencyTypeService {
 
@@ -74,19 +77,14 @@ public class CurrencyTypeService {
     // READ (REPOSITORY)
     // ======================
 
-    public CurrencyType findById(Long id)
-    {
-        return currencyTypeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Currency not found with id: " + id));
-    }
 
-    public CurrencyType findByShort( String currencyShort){
+    public CurrencyType findByShort(String currencyShort){
         return currencyTypeRepository.findCurrencyTypeByCurrencyShort(currencyShort)
-                .orElseThrow(() ->  new RuntimeException(currencyShort));
+                .orElseThrow(() ->new RuntimeException("This currency doesn't exist: " + currencyShort));
     }
 
-    public CurrencyType findByCurrency(String currency){
+    public CurrencyType findCurrencyTypeByCurrency(String currency){
         return currencyTypeRepository.findCurrencyTypeByCurrency(currency)
-                .orElseThrow(() -> new RuntimeException(currency));
+                .orElseThrow(() ->new RuntimeException("This currency doesn't exist: " + currency));
     }
 }

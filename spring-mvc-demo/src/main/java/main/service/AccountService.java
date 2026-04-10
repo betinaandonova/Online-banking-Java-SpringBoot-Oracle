@@ -87,7 +87,8 @@ public class AccountService {
     // READ (REPOSITORY)
     // ======================
 
-    public List<Account> findAll() {
+    public List<Account> findAll()
+    {
         return accountRepository.findAll();
     }
 
@@ -97,7 +98,7 @@ public class AccountService {
     }
 
     public List<Account> findByClientId(Long clientId) {
-        return accountRepository.findByClientId(clientId);
+        return accountRepository.findByClient_Id(clientId);
     }
 
     public Account findByIban(String iban) {

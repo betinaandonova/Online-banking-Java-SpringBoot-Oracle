@@ -1,9 +1,11 @@
 package main.repository;
 
 import main.model.Client;
+import org.aspectj.apache.bcel.classfile.Module;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ClientRepository extends JpaRepository<Client, Long> {
 
@@ -13,5 +15,5 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     List<Client> findByLastNameContainingIgnoreCase(String lastName);
 
-    List<Client> findByEgn(String egn);
+    Optional<Client> findByEgn(String egn);
 }

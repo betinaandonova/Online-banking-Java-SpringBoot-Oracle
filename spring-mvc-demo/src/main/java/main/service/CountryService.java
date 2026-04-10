@@ -5,6 +5,7 @@ import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
 import main.model.Country;
+import main.model.Employee;
 import main.repository.CountryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,12 +71,6 @@ public class CountryService {
     // ======================
     // READ (REPOSITORY)
     // ======================
-
-    public Country findById(Long id)
-    {
-        return countryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Country not found with id: " + id));
-    }
 
     public List<Country> findByCountryName(String countryName)
     {

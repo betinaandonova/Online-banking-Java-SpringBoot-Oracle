@@ -7,5 +7,8 @@ import java.util.List;
 
 public interface CityRepository extends JpaRepository<City, Long> {
 
+    List<City> findByCityNameContainingIgnoreCase(String cityName);
+
     List<City> findByCountry_Id(Long countryId);
+
 }

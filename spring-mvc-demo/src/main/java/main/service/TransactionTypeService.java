@@ -4,14 +4,23 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
+import main.model.TransactionType;
+import main.repository.TransactionTypeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class TransactionTypeService {
 
+    private final TransactionTypeRepository transactionTypeRepository;
     @PersistenceContext
     private EntityManager entityManager;
+
+    public TransactionTypeService(TransactionTypeRepository transactionTypeRepository) {
+        this.transactionTypeRepository = transactionTypeRepository;
+    }
 
     @Transactional
     public void insertTransactionType(String transactionTypeName) {
@@ -58,4 +67,22 @@ public class TransactionTypeService {
     // READ (REPOSITORY)
     // ======================
 
+    public List<TransactionType> findAll() {
+        return transactionTypeRepository.findAll();
+    }
+
+    public TransactionType findById(Long id) {
+        return transactionTypeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Transaction type not found with id: " + id));
+    }
+
+    public TransactionType findByTransactionTypeName(String transactionTypeName) {
+        return transactionTypeRepository.findByTransactionTypeName(transactionTypeName)
+                .orElseThrow(() -> new RuntimeException(
+                        "Transaction type not found with name: " + transactionTypeName));
+    }
+
+    public List<TransactionType> searchByTransactionTypeName(String transactionTypeName) {
+        return transactionTypeRepository.findByTransactionTypeNameContainingIgnoreCase(transactionTypeName);
+    }
 }

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import main.model.Client;
 import main.repository.ClientRepository;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClientService {
@@ -118,7 +119,8 @@ public class ClientService {
         return clientRepository.findByLastNameContainingIgnoreCase(lastName);
     }
 
-    public List<Client> findByEgn(String egn) {
-        return clientRepository.findByEgn(egn);
+    public Client findByEgn(String egn) {
+        return clientRepository.findByEgn(egn)
+                .orElseThrow(() ->new RuntimeException("Client with this EGN doesn't exist: " + egn));
     }
 }
