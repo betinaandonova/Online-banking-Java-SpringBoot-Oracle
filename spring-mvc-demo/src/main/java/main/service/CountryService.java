@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CountryService {
+public class CountryService implements MainReadService<Country, Long> {
 
     private final CountryRepository countryRepository;
     @PersistenceContext
@@ -72,8 +72,17 @@ public class CountryService {
     // READ (REPOSITORY)
     // ======================
 
-    public List<Country> findByCountryName(String countryName)
-    {
+    @Override
+    public List<Country> findAll() {
+        return countryRepository.findAll();
+    }
+
+    @Override
+    public Optional<Country> findById(Long id) {
+        return countryRepository.findById(id);
+    }
+
+    public List<Country> findByCountryName(String countryName){
         return countryRepository.findByCountryName(countryName);
     }
 

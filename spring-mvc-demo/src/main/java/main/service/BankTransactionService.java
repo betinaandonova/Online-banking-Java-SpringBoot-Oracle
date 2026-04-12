@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
+import main.model.Client;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
@@ -11,9 +12,10 @@ import java.time.LocalDate;
 import main.model.BankTransaction;
 import main.repository.BankTransactionRepository;
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class BankTransactionService {
+public class BankTransactionService implements MainReadService<BankTransaction, Long> {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -114,14 +116,7 @@ public class BankTransactionService {
     // READ (REPOSITORY)
     // ======================
 
-    public List<BankTransaction> findAll() {
-        return bankTransactionRepository.findAll();
-    }
 
-    public BankTransaction findById(Long id) {
-        return bankTransactionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Transaction not found with id: " + id));
-    }
 
     public List<BankTransaction> findByAccountId(Long accountId) {
         return bankTransactionRepository.findByAccount_IdOrderByTransactionDateDesc(accountId);
@@ -141,5 +136,15 @@ public class BankTransactionService {
 
     public List<BankTransaction> findByTransactionDateBetween(LocalDate startDate, LocalDate endDate) {
         return bankTransactionRepository.findByTransactionDateBetween(startDate, endDate);
+    }
+
+    @Override
+    public List<BankTransaction> findAll() {
+        return bankTransactionRepository.findAll();
+    }
+
+    @Override
+    public Optional<BankTransaction> findById(Long id) {
+        return bankTransactionRepository.findById(id);
     }
 }

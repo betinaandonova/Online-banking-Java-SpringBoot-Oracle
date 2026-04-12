@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
+import main.model.City;
 import main.model.Country;
 import main.model.CurrencyType;
 import main.repository.CurrencyTypeRepository;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CurrencyTypeService {
+public class CurrencyTypeService implements MainReadService<CurrencyType, Long>{
 
     private final CurrencyTypeRepository currencyTypeRepository;
     @PersistenceContext
@@ -86,5 +87,15 @@ public class CurrencyTypeService {
     public CurrencyType findCurrencyTypeByCurrency(String currency){
         return currencyTypeRepository.findCurrencyTypeByCurrency(currency)
                 .orElseThrow(() ->new RuntimeException("This currency doesn't exist: " + currency));
+    }
+
+    @Override
+    public List<CurrencyType> findAll() {
+        return currencyTypeRepository.findAll();
+    }
+
+    @Override
+    public Optional<CurrencyType> findById(Long id) {
+        return currencyTypeRepository.findById(id);
     }
 }

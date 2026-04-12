@@ -4,15 +4,17 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
+import main.model.OnlineBankingUser;
 import main.model.TransactionType;
 import main.repository.TransactionTypeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class TransactionTypeService {
+public class TransactionTypeService implements MainReadService<TransactionType, Long>{
 
     private final TransactionTypeRepository transactionTypeRepository;
     @PersistenceContext
@@ -67,14 +69,7 @@ public class TransactionTypeService {
     // READ (REPOSITORY)
     // ======================
 
-    public List<TransactionType> findAll() {
-        return transactionTypeRepository.findAll();
-    }
 
-    public TransactionType findById(Long id) {
-        return transactionTypeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Transaction type not found with id: " + id));
-    }
 
     public TransactionType findByTransactionTypeName(String transactionTypeName) {
         return transactionTypeRepository.findByTransactionTypeName(transactionTypeName)
@@ -84,5 +79,15 @@ public class TransactionTypeService {
 
     public List<TransactionType> searchByTransactionTypeName(String transactionTypeName) {
         return transactionTypeRepository.findByTransactionTypeNameContainingIgnoreCase(transactionTypeName);
+    }
+
+    @Override
+    public List<TransactionType> findAll() {
+        return transactionTypeRepository.findAll();
+    }
+
+    @Override
+    public Optional<TransactionType> findById(Long id) {
+        return transactionTypeRepository.findById(id);
     }
 }

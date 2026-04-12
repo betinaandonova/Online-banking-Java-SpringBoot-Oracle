@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
+import main.model.CurrencyType;
 import main.model.Employee;
 import main.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class EmployeeService {
+public class EmployeeService implements MainReadService<Employee, Long>{
 
     private final EmployeeRepository employeeRepository;
     @PersistenceContext
@@ -87,14 +88,6 @@ public class EmployeeService {
     // READ (REPOSITORY)
     // ======================
 
-    public List<Employee> findAll() {
-        return employeeRepository.findAll();
-    }
-
-    public Employee findById(Long id) {
-        return employeeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Employee not found with id: " + id));
-    }
 
     public List<Employee> findByName(String name) {
         return employeeRepository.findByNameContainingIgnoreCase(name);
@@ -111,5 +104,15 @@ public class EmployeeService {
     public Employee findByPhoneNumber(String phoneNumber) {
         return employeeRepository.findEmployeeByPhoneNumber(phoneNumber)
                 .orElseThrow(() -> new RuntimeException("Employee not found with phone number: " + phoneNumber));
+    }
+
+    @Override
+    public List<Employee> findAll() {
+        return employeeRepository.findAll();
+    }
+
+    @Override
+    public Optional<Employee> findById(Long id) {
+        return employeeRepository.findById(id);
     }
 }

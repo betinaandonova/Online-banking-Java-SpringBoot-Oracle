@@ -4,15 +4,17 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
+import main.model.Account;
 import main.model.City;
 import main.repository.CityRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class CityService {
+public class CityService implements MainReadService<City, Long>{
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -75,14 +77,7 @@ public class CityService {
     // READ (REPOSITORY)
     // ======================
 
-    public List<City> findAll() {
-        return cityRepository.findAll();
-    }
 
-    public City findById(Long id) {
-        return cityRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("City not found with id: " + id));
-    }
 
     public List<City> findByName(String name)
     {
@@ -91,5 +86,15 @@ public class CityService {
 
     public List<City> findByCountryId(Long countryId) {
         return cityRepository.findByCountry_Id(countryId);
+    }
+
+    @Override
+    public List<City> findAll() {
+        return cityRepository.findAll();
+    }
+
+    @Override
+    public Optional<City> findById(Long id) {
+        return cityRepository.findById(id);
     }
 }

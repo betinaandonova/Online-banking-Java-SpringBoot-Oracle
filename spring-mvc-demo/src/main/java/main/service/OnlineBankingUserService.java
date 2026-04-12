@@ -4,15 +4,17 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
+import main.model.ExchangeRate;
 import main.model.OnlineBankingUser;
 import main.repository.OnlineBankingUserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class OnlineBankingUserService {
+public class OnlineBankingUserService implements MainReadService<OnlineBankingUser, Long>{
 
     private final OnlineBankingUserRepository onlineBankingUserRepository;
     @PersistenceContext
@@ -99,14 +101,7 @@ public class OnlineBankingUserService {
     // READ (REPOSITORY)
     // ======================
 
-    public List<OnlineBankingUser> findAll() {
-        return onlineBankingUserRepository.findAll();
-    }
 
-    public OnlineBankingUser findById(Long id) {
-        return onlineBankingUserRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
-    }
 
     public OnlineBankingUser findByUsername(String username) {
         return onlineBankingUserRepository.findByUsername(username)
@@ -121,5 +116,15 @@ public class OnlineBankingUserService {
     public OnlineBankingUser findByEmployeeId(Long employeeId) {
         return onlineBankingUserRepository.findByEmployee_Id(employeeId)
                 .orElseThrow(() -> new RuntimeException("User not found for employee id: " + employeeId));
+    }
+
+    @Override
+    public List<OnlineBankingUser> findAll() {
+        return onlineBankingUserRepository.findAll();
+    }
+
+    @Override
+    public Optional<OnlineBankingUser> findById(Long id) {
+        return onlineBankingUserRepository.findById(id);
     }
 }

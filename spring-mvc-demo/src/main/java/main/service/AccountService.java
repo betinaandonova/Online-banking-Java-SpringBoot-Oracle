@@ -5,15 +5,17 @@ import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
 import main.model.Account;
+import main.model.BankTransaction;
 import main.repository.AccountRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class AccountService {
+public class AccountService implements MainReadService<Account, Long>{
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -87,15 +89,7 @@ public class AccountService {
     // READ (REPOSITORY)
     // ======================
 
-    public List<Account> findAll()
-    {
-        return accountRepository.findAll();
-    }
 
-    public Account findById(Long id) {
-        return accountRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Account not found with id: " + id));
-    }
 
     public List<Account> findByClientId(Long clientId) {
         return accountRepository.findByClient_Id(clientId);
@@ -104,5 +98,15 @@ public class AccountService {
     public Account findByIban(String iban) {
         return accountRepository.findByIban(iban)
                 .orElseThrow(() -> new RuntimeException("Account not found with IBAN: " + iban));
+    }
+
+    @Override
+    public List<Account> findAll() {
+        return accountRepository.findAll();
+    }
+
+    @Override
+    public Optional<Account> findById(Long id) {
+        return accountRepository.findById(id);
     }
 }

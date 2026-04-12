@@ -17,4 +17,8 @@ public interface BankTransactionRepository extends JpaRepository<BankTransaction
     List<BankTransaction> findByTransactionDate(LocalDate transactionDate);
 
     List<BankTransaction> findByTransactionDateBetween(LocalDate startDate, LocalDate endDate);
+
+    Long Id(Long id);
+
+    Long id(Long id);
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
+import main.model.Employee;
 import main.model.ExchangeRate;
 import main.repository.ExchangeRateRepository;
 import org.springframework.stereotype.Service;
@@ -12,9 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class ExchangeRateService {
+public class ExchangeRateService implements MainReadService<ExchangeRate, Long>{
 
     private final ExchangeRateRepository exchangeRateRepository;
     @PersistenceContext
@@ -81,8 +83,15 @@ public class ExchangeRateService {
     // READ (REPOSITORY)
     // ======================
 
+
+    @Override
     public List<ExchangeRate> findAll() {
         return exchangeRateRepository.findAll();
+    }
+
+    @Override
+    public Optional<ExchangeRate> findById(Long id) {
+        return exchangeRateRepository.findById(id);
     }
 
 
