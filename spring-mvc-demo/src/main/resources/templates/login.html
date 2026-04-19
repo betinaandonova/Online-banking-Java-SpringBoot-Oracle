@@ -1,17 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"><head>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&amp;display=swap" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/css/common.css">
-    <link rel="stylesheet" type="text/css" href="/css/form.css">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/form.css">
     <title>Login</title>
 </head>
+
 <body class="page-login">
 
 <main>
@@ -19,28 +14,58 @@
 
         <div class="container">
             <a href="/" class="logo-big">
-                <img src="\images\ba.png" alt="Logo Image">
+                <img src="/images/ba.png" alt="Logo Image">
             </a>
         </div>
 
-        <form class="form">
+        <!-- ВРЪЗКА С CONTROLLER -->
+        <form class="form" action="/login" method="post">
 
             <h3>Login Here</h3>
 
+            <!-- ГРЕШКИ ОТ BACKEND -->
+            <div style="color:red;" align="center">
+                <script>
+                    const params = new URLSearchParams(window.location.search);
+                    if (params.get("error") === "user") {
+                        document.write("User not found");
+                        document.close();
+                    }
+                    if (params.get("error") === "pass") {
+                        document.write("Wrong password");
+                        document.close();
+                    }
+                </script>
+            </div>
+
             <label for="username">Username</label>
-            <input type="text" placeholder="Username" id="username">
+            <input type="text"
+                   id="username"
+                   name="username"
+                   placeholder="Username"
+                   required>
 
             <label for="password">Password</label>
-            <input type="password" placeholder="Password" id="password">
+            <input type="password"
+                   id="password"
+                   name="password"
+                   placeholder="Password"
+                   required>
 
             <button type="submit">Log In</button>
 
-            <p class="form-already">Don't have an account? <a href="/register">Register now</a>!</p>
+            <p class="form-already">
+                Don't have an account? <a href="/register">Register now</a>!
+            </p>
 
         </form>
 
     </section>
 </main>
-<div class="footer"><p>© 2026 BSA Bank. All rights reserved.</p></div>
+
+<div class="footer">
+    <p>© 2026 BSA Bank. All rights reserved.</p>
+</div>
+
 </body>
 </html>
