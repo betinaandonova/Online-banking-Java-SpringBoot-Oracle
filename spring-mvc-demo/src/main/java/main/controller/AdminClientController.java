@@ -1,7 +1,9 @@
 package main.controller;
+
 import jakarta.servlet.http.HttpSession;
 import main.model.OnlineBankingUser;
 import main.service.ClientService;
+import main.service.OnlineBankingUserService;
 import main.util.AuthUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  *
  * Responsibilities:
  * - Display all clients
- * - Provide data to admin UI
+ * - Provide client data to admin UI
  *
  * Access:
  * - Only available to admin users
@@ -24,16 +26,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AdminClientController {
 
     private final ClientService clientService;
+    private final OnlineBankingUserService userService;
 
-    public AdminClientController(ClientService clientService) {
+    public AdminClientController(ClientService clientService,
+                                 OnlineBankingUserService userService) {
         this.clientService = clientService;
+        this.userService = userService;
     }
 
     @GetMapping("/admin/clients")
     public String clientsPage(HttpSession session, Model model) {
-        OnlineBankingUser user = (OnlineBankingUser) session.getAttribute("user");
+        Long userId = (Long) session.getAttribute("userId");
 
-        if (!AuthUtil.isAdmin(user)) {
+        if (userId == null) {
+            return "redirect:/login";
+        }
+
+        OnlineBankingUser user = userService.findById(userId).orElse(null);
+
+        if (user == null || !AuthUtil.isAdmin(user)) {
             return "redirect:/login";
         }
 

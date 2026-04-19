@@ -24,12 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
  * - Used for auditing and monitoring account activity
  */
 
-/**
- * Loads transactions for a specific account.
- *
- * @parameter accountId the ID of the account
- */
-
 @Controller
 public class TransactionController {
 

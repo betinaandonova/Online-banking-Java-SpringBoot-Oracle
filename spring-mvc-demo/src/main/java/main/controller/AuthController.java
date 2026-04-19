@@ -50,7 +50,7 @@ public class AuthController {
             return "redirect:/login?error=pass";
         }
 
-        session.setAttribute("user", user);
+        session.setAttribute("userId", user.getId());
 
         if (AuthUtil.isAdmin(user)) {
             return "redirect:/admin/home";

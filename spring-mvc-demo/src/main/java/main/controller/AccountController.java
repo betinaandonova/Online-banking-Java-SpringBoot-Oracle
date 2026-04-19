@@ -2,6 +2,7 @@ package main.controller;
 import jakarta.servlet.http.HttpSession;
 import main.model.OnlineBankingUser;
 import main.service.AccountService;
+import main.service.OnlineBankingUserService;
 import main.util.AuthUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,35 +13,35 @@ import org.springframework.web.bind.annotation.GetMapping;
  * Controller for admin account management pages.
  *
  * Responsibilities:
- * - Display all bank accounts in the system
+ * - Display all bank accounts
  * - Provide account data to admin UI
  *
  * Access:
  * - Only available to admin users
- *
- * Notes:
- * - Used by admin to inspect client accounts
- * - Acts as entry point to view account transactions
- */
-
-/**
- * Loads all accounts for admin view.
  */
 
 @Controller
 public class AccountController {
 
     private final AccountService accountService;
+    private final OnlineBankingUserService onlineBankingUserService;
 
-    public AccountController(AccountService accountService) {
+    public AccountController(AccountService accountService, OnlineBankingUserService onlineBankingUserService) {
         this.accountService = accountService;
+        this.onlineBankingUserService = onlineBankingUserService;
     }
 
     @GetMapping("/admin/accounts")
     public String adminAccounts(HttpSession session, Model model) {
-        OnlineBankingUser user = (OnlineBankingUser) session.getAttribute("user");
+        Long userId = (Long) session.getAttribute("userId");
 
-        if (!AuthUtil.isAdmin(user)) {
+        if (userId == null) {
+            return "redirect:/login";
+        }
+
+        OnlineBankingUser user = onlineBankingUserService.findById(userId).orElse(null);
+
+        if (user == null || !AuthUtil.isAdmin(user)) {
             return "redirect:/login";
         }
 

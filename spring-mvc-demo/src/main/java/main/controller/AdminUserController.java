@@ -8,6 +8,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+/**
+ * Controller for admin user management pages.
+ *
+ * Responsibilities:
+ * - Display all online banking users
+ * - Provide user data to admin UI
+ *
+ * Access:
+ * - Only available to admin users
+ */
+
 @Controller
 public class AdminUserController {
 
@@ -19,9 +30,15 @@ public class AdminUserController {
 
     @GetMapping("/admin/users")
     public String getAllUsers(HttpSession session, Model model) {
-        OnlineBankingUser user = (OnlineBankingUser) session.getAttribute("user");
+        Long userId = (Long) session.getAttribute("userId");
 
-        if (!AuthUtil.isAdmin(user)) {
+        if (userId == null) {
+            return "redirect:/login";
+        }
+
+        OnlineBankingUser user = userService.findById(userId).orElse(null);
+
+        if (user == null || !AuthUtil.isAdmin(user)) {
             return "redirect:/login";
         }
 
