@@ -10,6 +10,7 @@
   margin: 60px auto; /* 🔥 това центрира */
 }
 
+
 .profile-card:hover {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
@@ -325,4 +326,25 @@
 
 .home-profile-information a.profile-actions-button {
   margin-top: 40px;
+}
+
+main {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.home-section {
+  display: flex;
+  flex: 1;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.single-section-box.home-profile-information {
+  width: 100%;
+  max-width: none;
+  flex: 1;
+  margin: 30px;
+  min-height: 600px;
 }

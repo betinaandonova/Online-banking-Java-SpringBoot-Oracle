@@ -1,7 +1,9 @@
 .home-section {
     display: flex;
-    justify-content: center;
+    width: 100%;
+    justify-content: flex-start;
 }
+
 
 .profile-menu {
     position: relative;
