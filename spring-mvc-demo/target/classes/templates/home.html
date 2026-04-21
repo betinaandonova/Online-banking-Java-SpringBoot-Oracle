@@ -9,6 +9,7 @@
   <link rel="stylesheet" type="text/css" href="/css/nav-side-bar.css">
   <link rel="stylesheet" type="text/css" href="/css/home-common.css">
   <link rel="stylesheet" type="text/css" href="/css/home.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <title>Home</title>
 </head>
 <body>
@@ -19,7 +20,7 @@
       <nav>
       <div class="side_navbar">
         <div class="smart-wallet-nav-bar">
-          <div class="smart-wallet-nav-bar-name" >BSA Bank</div>
+          <div class="smart-wallet-nav-bar-name" >Blackstone Bank</div>
         </div>
         <div class="func-block">
           <a href="/home" class="active">
@@ -79,23 +80,23 @@
       </div>
       <div class="profile-info">
         <div class="details-section-container">
-          <strong>First and Last name: </strong>
+          <p class="label">Name:</p>
           <p th:text="${profile.name + ' ' + profile.lastName}">Name</p>
         </div>
         <div class="details-section-container">
-          <strong>Phone Number: </strong>
+          <p class="label">Phone Number: </p>
           <p th:text="${profile.phoneNumber}">Phone Number</p>
         </div>
         <div class="details-section-container">
-          <strong>Adress: </strong>
+          <p class="label">Adress: </p>
           <p th:text="${profile.address}">Address</p>
         </div>
         <div class="details-section-container">
-          <strong>City: </strong>
+          <p class="label">City: </p>
           <p th:text="${profile.city}">City</p>
         </div>
         <div class="details-section-container">
-          <strong>Country: </strong>
+          <p class="label">Country: </p>
           <p th:text="${profile.country}">Country</p>
         </div>
       </div>

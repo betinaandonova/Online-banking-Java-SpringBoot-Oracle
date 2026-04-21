@@ -5,6 +5,9 @@
 .section.full-height {
   display: flex;
   flex-direction: column;
+  justify-content: center;  /* център вертикално */
+  min-height: 90vh;        /* за да има височина */
+  transform: translateX(130px); /* 👉 мести надясно */
 }
 
 .section.full-height .container {
@@ -95,20 +98,52 @@ option {
 button {
   margin-top: 50px;
   width: 100%;
-  background: radial-gradient(
-      circle at 90% top,
-      #d2c8f4 0%, /* Light lavender */ #c4bbeb 10%, /* Softer purple */ #b7aee2 20%, /* Muted purple */ #aaa1d9 30%, /* Gentle lavender */ #9d94d0 40%, /* Subtle lilac */ #9087c8 50%, /* Balanced light purple */ #837bbc 60%, /* Light grayish purple */ #766fb0 70%, /* Soft indigo */ #6963a4 80%, /* Muted navy */ #5c5798 90%, /* Deep lavender */ #4f4c8c 100% /* Rich lavender */
+
+  background: linear-gradient(
+          145deg,
+          #3e2f0d,
+          #b8962e,
+          #f0d97a,
+          #a17c1a,
+          #3e2f0d
   );
-  color: #ffffff;
+
+  color: #0b1d3a;
+
   padding: 15px 0;
   font-size: 18px;
   font-weight: 600;
-  border-radius: 5px;
+
+  border-radius: 8px;
   cursor: pointer;
+
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  box-shadow:
+          inset 0 2px 3px rgba(255, 255, 255, 0.25),  /* горен блясък */
+          inset 0 -2px 5px rgba(0, 0, 0, 0.4),        /* долна сянка */
+          0 8px 20px rgba(0, 0, 0, 0.35);             /* външна сянка */
+
+  transition: all 0.25s ease;
 }
 
 button:hover {
-  box-shadow: inset 0 1px 9px rgba(255, 255, 255, 0.5); /* Inset shadow with transparency */
+  transform: translateY(-3px) scale(1.03);
+
+  background: linear-gradient(
+          145deg,
+          #4a390e,
+          #c9a63a,
+          #ffe08a,
+          #b8962e,
+          #4a390e
+  );
+
+  box-shadow:
+          inset 0 3px 5px rgba(255, 255, 255, 0.35),
+          inset 0 -3px 6px rgba(0, 0, 0, 0.5),
+          0 12px 30px rgba(0, 0, 0, 0.5),
+          0 0 15px rgba(184, 150, 46, 0.4);
 }
 
 input, select {
@@ -129,8 +164,17 @@ input:hover, select:hover {
 
 .form-already a {
   text-decoration: none;
-  transition: 0.5s ease-out;
-  background: radial-gradient(circle at 90% top, #746ab0 0%, #a095e6 10%, #faf9f9 20%, #c5bfff 30%, #978ef1 40%, #7871f6 50%, #817cff 60%, #8eafe9 70%, #a1a1ff 80%, #a8a8ff 90%, #6d78f3 100%);
+  transition: 0.4s ease;
+
+  background: linear-gradient(
+          135deg,
+          #8c6b1f,
+          #c9a63a,
+          #e6c55c,
+          #a17c1a,
+          #6e5315
+  );
+
   background-size: 200%;
   background-clip: text;
   -webkit-background-clip: text;
@@ -138,6 +182,6 @@ input:hover, select:hover {
 }
 
 .form-already a:hover {
-  background-position: right;
-  transition: 0.5s ease-out;
+  background-position: 100% center;
+  text-shadow: 0 0 6px rgba(184, 150, 46, 0.4);
 }

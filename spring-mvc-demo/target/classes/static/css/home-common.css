@@ -1,13 +1,34 @@
 body {
-  background: linear-gradient(
-          135deg,
-          #1a1a40,
-          #2e2d5a,
-          #4c477f,
-          #746ab0
-  );
-  width: 100%;
-  border-radius: 6px;}
+  background:
+          radial-gradient(circle at 80% 20%, rgba(184,150,46,0.08), transparent 40%),
+          radial-gradient(circle at 20% 80%, rgba(255,255,255,0.04), transparent 50%),
+          linear-gradient(
+                  135deg,
+                  #020617,
+                  #0b1d3a,
+                  #112a52,
+                  #1b3b73
+          );
+
+  background-attachment: fixed;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+
+  background-image: url("https://www.transparenttextures.com/patterns/noise.png");
+  opacity: 0.05; /* много леко! */
+
+  pointer-events: none;
+  z-index: 0;
+}
+
+main {
+  position: relative;
+  z-index: 1;
+}
 
 body main {
   margin: 20px 20px 0;
@@ -32,7 +53,15 @@ body main {
 }
 
 div.single-section-box {
-  background: #ffffff;
+  background: linear-gradient(
+          145deg,
+          #0f2747,   /* основен */
+          #112a52,   /* дълбочина */
+          #0b1d3a    /* shadow tone */
+  );
+  box-shadow:
+          0 8px 25px rgba(251, 251, 251, 0.4),
+          0 0 8px rgba(186, 155, 62, 0.08); /* лек gold glow */
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(255, 255, 255, 0);
@@ -54,19 +83,41 @@ div.single-section-box {
 }
 
 .profile-status-role-container .active-profile {
-  display: inline-block; /* 🔥 това е ключът */
+  display: inline-block;
 
-  backdrop-filter: blur(8px);
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 999px; /* pill shape */
+
+  font-size: 11px;
   font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
-  background-color: #e0f7e9;
-  color: #2e7d32;
-  border: 1px solid rgba(84, 227, 54, 0.6);
-  box-shadow: 0 4px 8px rgba(0, 153, 51, 0.15);
+
+  background: linear-gradient(
+          135deg,
+          rgba(34, 197, 94, 0.15),
+          rgba(184, 150, 46, 0.08)
+  );
+
+  color: #22c55e;
+
+  border: 1px solid rgba(34, 197, 94, 0.3);
+
+  backdrop-filter: blur(6px);
+
+  box-shadow:
+          0 4px 12px rgba(34, 197, 94, 0.15),
+          0 0 6px rgba(184, 150, 46, 0.1);
+
+  transition: all 0.3s ease;
+}
+
+.profile-status-role-container .active-profile:hover {
+  transform: scale(1.05);
+
+  box-shadow:
+          0 6px 16px rgba(34, 197, 94, 0.25),
+          0 0 10px rgba(184, 150, 46, 0.2);
 }
 
 .profile-status-role-container .inactive-profile {

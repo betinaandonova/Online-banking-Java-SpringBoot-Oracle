@@ -27,17 +27,17 @@
 }
 
 .func-block span {
-  font-size: 16px;
-  font-weight: 300;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500; /* НЕ 700 */
+  font-size: 16px;  /* по-малък */
+  color: #0b1d3a;
+  letter-spacing: 0.03em;
+
   margin-bottom: 10px;
   display: block;
-  background: radial-gradient(ellipse at top, #746ab0 0%, #a095e6 10%, #faf9f9 20%, #c5bfff 30%, #978ef1 40%, #7871f6 50%, #817cff 60%, #8eafe9 70%, #a1a1ff 80%, #a8a8ff 90%, #6d78f3 100%);
-  background-size: 200%;
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: initial;
   padding: 8px 12px;
-  height: 10%;
 }
 
 .func-block a {
@@ -65,21 +65,12 @@
 }
 
 .func-block a:hover {
-  background: radial-gradient(circle at 90% top, #746ab0 0%, #6a61a4 10%, #605899 20%, #56508d 30%, #4c477f 40%, #423f73 50%, #383666 60%, #2e2d5a 70%, #24244d 80%, #1a1a41 90%, #101035 100%);
-  color: white;
-  font-size: 14px;
-  font-weight: 300;
-  transition: background 0.9s ease-in-out;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(145deg, #f7dc6f, #f4b942, #e67e22, #d35400);
+  color: #fff;
+  box-shadow: 0 4px 8px rgba(243, 156, 18, 0.5);
 }
 
 .func-block a.active {
-  background: radial-gradient(circle at 90% top, #746ab0 0%, #6a61a4 10%, #605899 20%, #56508d 30%, #4c477f 40%, #423f73 50%, #383666 60%, #2e2d5a 70%, #24244d 80%, #1a1a41 90%, #101035 100%);
-  color: white;
-  font-weight: 300;
-}
-
-.func-block a.active-special-gold {
   background: linear-gradient(145deg, #f1c40f, #f39c12, #e67e22, #d35400); /* Gold gradient */
   color: white;
   font-weight: 300;
@@ -87,42 +78,74 @@
   transition: all 0.5s ease-in-out;
 }
 
-.func-block a.special-gold:hover {
-  background: linear-gradient(145deg, #f7dc6f, #f4b942, #e67e22, #d35400);
-  color: #fff;
-  box-shadow: 0 4px 8px rgba(243, 156, 18, 0.5);
-}
 
 .func-block .logout {
-  background: linear-gradient(145deg, #ff6767, #ff6767);
-  color: white;
+  background: linear-gradient(
+          145deg,
+          #7f1d1d,
+          #b91c1c,
+          #ef4444
+  );
+
+  color: #ffffff;
+
+  border-radius: 8px;
+  padding: 10px 14px;
+
+  font-weight: 500;
+  letter-spacing: 0.03em;
+
+  transition: all 0.3s ease;
+
+  box-shadow:
+          0 4px 12px rgba(239, 68, 68, 0.25);
 }
 
 .func-block a.logout:hover {
-  background: linear-gradient(145deg, #ff6767, #ff6767);
-  color: white;
+  background: linear-gradient(
+          145deg,
+          #991b1b,
+          #dc2626,
+          #f87171
+  );
+
+  transform: translateX(4px);
+
+  box-shadow:
+          0 6px 16px rgba(239, 68, 68, 0.35),
+          0 0 8px rgba(239, 68, 68, 0.2);
 }
 
 .smart-wallet-nav-bar {
   display: flex;
   padding: 20px 0;
   width: 100%;
-  background: radial-gradient(ellipse at top, #746ab0 0%, #a095e6 10%, #faf9f9 20%, #c5bfff 30%, #978ef1 40%, #7871f6 50%, #817cff 60%, #8eafe9 70%, #a1a1ff 80%, #a8a8ff 90%, #6d78f3 100%);
-  background-size: 200%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+
+  /* махаме gradient */
+  background: none;
+
+  /* текст */
+  color: #0b1d3a; /* тъмно банково синьо */
+  font-weight: 700; /* bold */
+  font-size: 20px;
+  letter-spacing: 0.05em;
+
+  /* махаме старите ефекти */
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: initial;
 }
+
 
 .smart-wallet-nav-bar div{
   padding: 5px 5px;
 }
 
 .smart-wallet-nav-bar-name {
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 300;
-  display: inline-block;
-  background: transparent;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500; /* НЕ 700 */
+  font-size: 16px;  /* по-малък */
+  color: #0b1d3a;
+  letter-spacing: 0.03em;
 }
 
 .smart-wallet-nav-bar-version {

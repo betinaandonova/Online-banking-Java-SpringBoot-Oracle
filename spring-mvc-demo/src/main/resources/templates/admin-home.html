@@ -9,6 +9,7 @@
   <link rel="stylesheet" type="text/css" href="/css/nav-side-bar.css">
   <link rel="stylesheet" type="text/css" href="/css/home-common.css">
   <link rel="stylesheet" type="text/css" href="/css/home.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <title>Home</title>
 </head>
 <body>
@@ -19,7 +20,7 @@
       <nav>
       <div class="side_navbar">
         <div class="smart-wallet-nav-bar">
-          <div class="smart-wallet-nav-bar-name" >BSA Bank</div>
+          <div class="smart-wallet-nav-bar-name" >Blackstone Bank</div>
         </div>
         <div class="func-block">
           <a href="/admin/home" class="active">
@@ -30,7 +31,7 @@
           </a>
         </div>
         <div class="func-block admin-func-block">
-          <span>Admin</span>
+          <span>Admin panel</span>
           <a href="/admin/users">
             <p>Users</p>
             <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
@@ -91,11 +92,11 @@
       </div>
       <div class="profile-info">
         <div class="details-section-container">
-          <strong>First and Last name: </strong>
+          <p class="label">First and Last name:</p>
           <p th:text="${profile.name + ' ' + profile.lastName}">Name</p>
         </div>
         <div class="details-section-container">
-          <strong>Phone Number: </strong>
+          <p class="label">Phone Number: </p>
           <p th:text="${profile.phoneNumber}">Phone Number</p>
         </div>
       </div>
