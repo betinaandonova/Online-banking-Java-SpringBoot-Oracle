@@ -10,9 +10,16 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "CLIENT")
+@SequenceGenerator(
+        name = "client_seq_generator",
+        sequenceName = "SEQ_CLIENT_ID",
+        allocationSize = 1)
+
 public class Client {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "client_seq_generator")
+    @SequenceGenerator(name = "client_seq_generator", sequenceName = "SEQ_CLIENT_ID", allocationSize = 1)
     @Column(name = "CLIENT_ID")
     private Long id;
 

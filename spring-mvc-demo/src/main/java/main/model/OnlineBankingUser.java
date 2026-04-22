@@ -10,10 +10,15 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "ONLINE_BANKING_USER")
+@SequenceGenerator(
+        name = "user_seq_generator",
+        sequenceName = "SEQ_USER_ID",
+        allocationSize = 1)
 
 public class OnlineBankingUser {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq_generator")
     @Column(name = "USER_ID")
     private Long id;
 
