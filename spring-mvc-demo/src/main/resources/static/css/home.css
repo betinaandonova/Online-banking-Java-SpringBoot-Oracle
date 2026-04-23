@@ -393,3 +393,14 @@ main {
 .profile-info .details-section-container p {
   margin: 0;
 }
+
+.table-header {
+  display: flex;
+  justify-content: flex-end; /* бута ги вдясно */
+  margin-bottom: 15px;
+}
+
+.table-actions {
+  display: flex;
+  gap: 10px;
+}

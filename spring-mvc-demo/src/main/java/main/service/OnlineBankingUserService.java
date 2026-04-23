@@ -242,4 +242,24 @@ public class OnlineBankingUserService implements MainReadService<OnlineBankingUs
 
         throw new RuntimeException("Invalid user type");
     }
+
+    public List<Client> getClientsWithoutUser() {
+
+        StoredProcedureQuery query = entityManager
+                .createStoredProcedureQuery("SPR_CLIENTS_WITHOUT_USER");
+
+        query.registerStoredProcedureParameter("p_result", void.class, ParameterMode.REF_CURSOR);
+
+        query.execute();
+
+        List<Object[]> result = query.getResultList();
+
+        return result.stream().map(row -> {
+            Client c = new Client();
+            c.setId(((Number) row[0]).longValue());
+            c.setName((String) row[1]);
+            c.setLastName((String) row[2]);
+            return c;
+        }).toList();
+    }
 }
