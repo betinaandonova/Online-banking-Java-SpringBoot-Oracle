@@ -95,14 +95,53 @@
 
         <tbody>
         <tr th:each="u : ${users}">
+
           <td th:text="${u.id}">1</td>
-          <td th:text="${u.username}">username</td>
-          <td>********</td>
+
+          <td>
+            <input type="text"
+                   name="username"
+                   th:value="${u.username}"
+                   class="edit-input"
+                   th:attr="form=${'editForm-' + u.id}"
+                   disabled>
+          </td>
+
+          <td>
+            <input type="password"
+                   name="password"
+                   placeholder="new password"
+                   class="edit-input"
+                   th:attr="form=${'editForm-' + u.id}"
+                   disabled>
+          </td>
+
           <td class="action-buttons">
-            <a th:href="@{/admin/users/edit/{id}(id=${u.id})}" class="btn edit-btn">Edit</a>
+
+            <form th:id="${'editForm-' + u.id}"
+                  th:action="@{/admin/users/edit/{id}(id=${u.id})}"
+                  method="post">
+            </form>
+
+            <button type="button"
+                    class="btn edit-btn"
+                    onclick="enableEdit(this)">
+              Edit
+            </button>
+
+            <button type="submit"
+                    class="btn edit-btn save-btn"
+                    th:attr="form=${'editForm-' + u.id}"
+                    style="display:none;">
+              Save
+            </button>
+
             <a th:href="@{/admin/users/delete/{id}(id=${u.id})}"
                class="btn delete-btn"
-               onclick="return confirm('Are you sure?')">Delete</a>
+               onclick="return confirm('Are you sure?')">
+              Delete
+            </a>
+
           </td>
         </tr>
         </tbody>
@@ -112,6 +151,18 @@
   </div>
 </main>
 <div class="footer"><p>© 2026 BSA Bank. All rights reserved.</p></div>
+<script>
+  function enableEdit(button) {
+    const row = button.closest("tr");
 
+    const inputs = row.querySelectorAll(".edit-input");
+    inputs.forEach(input => input.disabled = false);
+
+    button.style.display = "none";
+
+    const saveBtn = row.querySelector(".save-btn");
+    saveBtn.style.display = "inline-block";
+  }
+</script>
 </body>
 </html>

@@ -404,3 +404,10 @@ main {
   display: flex;
   gap: 10px;
 }
+
+.edit-input {
+  width: 120px;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}

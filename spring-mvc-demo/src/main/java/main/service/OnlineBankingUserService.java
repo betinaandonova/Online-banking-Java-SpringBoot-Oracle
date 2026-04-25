@@ -57,8 +57,6 @@ public class OnlineBankingUserService implements MainReadService<OnlineBankingUs
 
     @Transactional
     public void updateOnlineUser(Long userId,
-                                 Long clientId,
-                                 Long employeeId,
                                  String username,
                                  String passwordHash) {
 
@@ -66,14 +64,10 @@ public class OnlineBankingUserService implements MainReadService<OnlineBankingUs
                 .createStoredProcedureQuery("ONLINE_USER_UPD");
 
         query.registerStoredProcedureParameter("p_user_id", Long.class, ParameterMode.IN);
-        query.registerStoredProcedureParameter("p_client_id", Long.class, ParameterMode.IN);
-        query.registerStoredProcedureParameter("p_employee_id", Long.class, ParameterMode.IN);
         query.registerStoredProcedureParameter("p_username", String.class, ParameterMode.IN);
         query.registerStoredProcedureParameter("p_password_hash", String.class, ParameterMode.IN);
 
         query.setParameter("p_user_id", userId);
-        query.setParameter("p_client_id", clientId);
-        query.setParameter("p_employee_id", employeeId);
         query.setParameter("p_username", username);
         query.setParameter("p_password_hash", passwordHash);
 
