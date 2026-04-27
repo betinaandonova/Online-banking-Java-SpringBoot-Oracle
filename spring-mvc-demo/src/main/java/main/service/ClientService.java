@@ -11,6 +11,8 @@ import main.model.Client;
 import main.repository.ClientRepository;
 import java.util.List;
 import java.util.Optional;
+import main.dto.AdminClientResponse;
+import java.util.ArrayList;
 
 @Service
 public class ClientService implements MainReadService<Client, Long> {
@@ -127,5 +129,37 @@ public class ClientService implements MainReadService<Client, Long> {
     {
         return clientRepository.findByEgn(egn)
                 .orElseThrow(() ->new RuntimeException("Client with this EGN doesn't exist: " + egn));
+    }
+
+    public List<AdminClientResponse> getAdminClients() {
+
+        StoredProcedureQuery query =
+                entityManager.createStoredProcedureQuery("SPR_ADMIN_CLIENTS");
+
+        query.registerStoredProcedureParameter(
+                "p_result",
+                void.class,
+                ParameterMode.REF_CURSOR
+        );
+
+        query.execute();
+
+        List<Object[]> rows = query.getResultList();
+        List<AdminClientResponse> clients = new ArrayList<>();
+
+        for (Object[] row : rows) {
+            clients.add(new AdminClientResponse(
+                    ((Number) row[0]).longValue(),
+                    (String) row[1],
+                    (String) row[2],
+                    (String) row[3],
+                    (String) row[4],
+                    (String) row[5],
+                    (String) row[6],
+                    (String) row[7]
+            ));
+        }
+
+        return clients;
     }
 }

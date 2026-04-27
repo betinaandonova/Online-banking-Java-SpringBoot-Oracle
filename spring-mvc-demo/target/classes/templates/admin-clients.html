@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="/css/home-common.css">
     <link rel="stylesheet" type="text/css" href="/css/home.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/subscription-history.css">
     <title>Home</title>
 </head>
 <body>
@@ -70,32 +71,146 @@
             </nav>
         </div>
     </div>
-<h1>Clients</h1>
 
-<table border="1">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>EGN</th>
-        <th>Phone</th>
-        <th>Address</th>
-        <th>City</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="client : ${clients}">
-        <td th:text="${client.id}"></td>
-        <td th:text="${client.name}"></td>
-        <td th:text="${client.lastName}"></td>
-        <td th:text="${client.egn}"></td>
-        <td th:text="${client.phoneNumber}"></td>
-        <td th:text="${client.address}"></td>
-        <td th:text="${client.city.cityName}"></td>
-    </tr>
-    </tbody>
-</table>
+    <div class="home-section">
+        <div class="single-section-box subscriptions-container">
 
+            <div class="table-header admin-table-header">
+
+                <div class="table-actions">
+                    <a href="/admin/clients/add" class="btn add-btn">+ Add Client</a>
+                </div>
+            </div>
+
+            <table class="styled-table">
+                <thead>
+                <tr>
+                    <th>CLIENT ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>EGN</th>
+                    <th>Phone Number</th>
+                    <th>Adress</th>
+                    <th>City</th>
+                    <th>Country</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="c : ${clients}">
+
+                    <!-- ID (само текст) -->
+                    <td th:text="${c.id}">1</td>
+
+                    <!-- NAME -->
+                    <td>
+                        <input type="text"
+                               name="name"
+                               th:value="${c.name}"
+                               class="edit-input"
+                               th:attr="form=${'editForm-' + c.id}"
+                               disabled>
+                    </td>
+
+                    <!-- LAST NAME -->
+                    <td>
+                        <input type="text"
+                               name="lastName"
+                               th:value="${c.lastName}"
+                               class="edit-input"
+                               th:attr="form=${'editForm-' + c.id}"
+                               disabled>
+                    </td>
+
+                    <!-- EGN (НЕ editable) -->
+                    <td th:text="${c.egn}"></td>
+
+                    <!-- PHONE -->
+                    <td>
+                        <input type="text"
+                               name="phoneNumber"
+                               th:value="${c.phone}"
+                               class="edit-input"
+                               th:attr="form=${'editForm-' + c.id}"
+                               disabled>
+                    </td>
+
+                    <!-- ADDRESS -->
+                    <td>
+                        <input type="text"
+                               name="address"
+                               th:value="${c.address}"
+                               class="edit-input"
+                               th:attr="form=${'editForm-' + c.id}"
+                               disabled>
+                    </td>
+
+                    <!-- CITY (само текст) -->
+                    <td>
+                        <select name="cityId"
+                                class="edit-input"
+                                th:attr="form=${'editForm-' + c.id}"
+                                disabled>
+                            <option th:each="city : ${cities}"
+                                    th:value="${city.id}"
+                                    th:text="${city.cityName}"
+                                    th:selected="${city.cityName == c.city}">
+                            </option>
+                        </select>
+                    </td>
+
+                    <!-- COUNTRY (само текст) -->
+                    <td th:text="${c.country}"></td>
+
+                    <td class="action-buttons">
+
+                        <form th:id="${'editForm-' + c.id}"
+                              th:action="@{/admin/clients/edit/{id}(id=${c.id})}"
+                              method="post">
+                        </form>
+
+                        <button type="button"
+                                class="btn edit-btn"
+                                onclick="enableEdit(this)">
+                            Edit
+                        </button>
+
+                        <button type="submit"
+                                class="btn edit-btn save-btn"
+                                th:attr="form=${'editForm-' + c.id}"
+                                style="display:none;">
+                            Save
+                        </button>
+
+                        <a th:href="@{/admin/clients/delete/{id}(id=${c.id})}"
+                           class="btn delete-btn"
+                           onclick="return confirm('Are you sure?')">
+                            Delete
+                        </a>
+
+                    </td>
+
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</main>
+<script>
+    function enableEdit(button) {
+        const row = button.closest("tr");
+
+        const inputs = row.querySelectorAll(".edit-input");
+        inputs.forEach(input => input.disabled = false);
+
+        button.style.display = "none";
+
+        const saveBtn = row.querySelector(".save-btn");
+        saveBtn.style.display = "inline-block";
+    }
+</script>
 </body>
 </html>

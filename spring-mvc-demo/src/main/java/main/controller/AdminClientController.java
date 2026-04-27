@@ -1,6 +1,7 @@
 package main.controller;
 
 import jakarta.servlet.http.HttpSession;
+import main.model.Client;
 import main.model.OnlineBankingUser;
 import main.service.ClientService;
 import main.service.OnlineBankingUserService;
@@ -8,6 +9,11 @@ import main.util.AuthUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import main.service.CityService;
+
 
 
 /**
@@ -27,11 +33,13 @@ public class AdminClientController {
 
     private final ClientService clientService;
     private final OnlineBankingUserService userService;
+    private final CityService cityService;
 
     public AdminClientController(ClientService clientService,
-                                 OnlineBankingUserService userService) {
+                                 OnlineBankingUserService userService, CityService cityService) {
         this.clientService = clientService;
         this.userService = userService;
+        this.cityService = cityService;
     }
 
     @GetMapping("/admin/clients")
@@ -48,7 +56,84 @@ public class AdminClientController {
             return "redirect:/login";
         }
 
-        model.addAttribute("clients", clientService.findAll());
+        model.addAttribute("clients", clientService.getAdminClients());
+        model.addAttribute("cities", cityService.findAll());
         return "admin-clients";
+    }
+
+    @PostMapping("/admin/clients/edit/{id}")
+    public String editClient(@PathVariable Long id,
+                             @RequestParam String name,
+                             @RequestParam String lastName,
+                             @RequestParam String phoneNumber,
+                             @RequestParam String address,
+                             @RequestParam Long cityId) {
+
+        clientService.updateClient(
+                id,
+                name,
+                lastName,
+                phoneNumber,
+                address,
+                cityId
+        );
+
+        return "redirect:/admin/clients";
+    }
+
+    @GetMapping("/admin/clients/delete/{id}")
+    public String deleteClient(@PathVariable Long id) {
+
+        clientService.deleteClient(id);
+
+        return "redirect:/admin/clients";
+    }
+
+    @GetMapping("/admin/clients/add")
+    public String addClientPage(HttpSession session, Model model) {
+        Long userId = (Long) session.getAttribute("userId");
+
+        if (userId == null) {
+            return "redirect:/login";
+        }
+
+        OnlineBankingUser user = userService.findById(userId).orElse(null);
+
+        if (user == null || !AuthUtil.isAdmin(user)) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("cities", cityService.findAll());
+
+        return "admin-add-client";
+    }
+
+    @PostMapping("/admin/clients/add")
+    public String addClient(@RequestParam String name,
+                            @RequestParam String lastName,
+                            @RequestParam String egn,
+                            @RequestParam String phoneNumber,
+                            @RequestParam String address,
+                            @RequestParam Long cityId) {
+
+        if (name.isBlank() || lastName.isBlank() || egn.isBlank()
+                || phoneNumber.isBlank() || address.isBlank()) {
+            return "redirect:/admin/clients/add?error=empty";
+        }
+
+        try {
+            clientService.insertClient(
+                    name,
+                    lastName,
+                    egn,
+                    phoneNumber,
+                    address,
+                    cityId
+            );
+        } catch (Exception e) {
+            return "redirect:/admin/clients/add?error=egnTaken";
+        }
+
+        return "redirect:/admin/clients";
     }
 }
