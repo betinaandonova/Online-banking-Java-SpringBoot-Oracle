@@ -25,8 +25,12 @@ public class CountryService implements MainReadService<Country, Long> {
     }
 
     @Transactional
-    public void insertCountry(String countryName)
-    {
+    public void insertCountry(String countryName) {
+
+        // ✅ ВАЛИДАЦИЯ
+        if (countryName == null || countryName.trim().isEmpty()) {
+            throw new RuntimeException("Country name cannot be empty");
+        }
 
         StoredProcedureQuery query = entityManager
                 .createStoredProcedureQuery("COUNTRY_INS");
@@ -85,5 +89,12 @@ public class CountryService implements MainReadService<Country, Long> {
     public List<Country> findByCountryName(String countryName){
         return countryRepository.findByCountryName(countryName);
     }
+    public List<Country> getCountries(String searchValue) {
 
+        if (searchValue == null || searchValue.trim().isEmpty()) {
+            return findAll();
+        }
+
+        return countryRepository.findByCountryNameContainingIgnoreCase(searchValue);
+    }
 }

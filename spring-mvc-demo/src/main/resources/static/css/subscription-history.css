@@ -98,3 +98,19 @@
   gap: 6px;
   justify-content: center;
 }
+
+.success-message {
+  background-color: #e6f9ed;
+  color: #2e7d32;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.error-message {
+  background-color: #fdecea;
+  color: #c62828;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
