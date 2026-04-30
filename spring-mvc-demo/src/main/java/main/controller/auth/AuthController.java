@@ -11,12 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Handles authentication logic.
- *
  * Responsibilities:
  * - Login (GET/POST)
  * - Logout
  * - Session management
- *
  * Determines user role (admin or client) and redirects accordingly.
  */
 

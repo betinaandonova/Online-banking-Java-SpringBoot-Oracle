@@ -4,7 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
-import main.model.Country;
+import main.exception.InvalidDataException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import main.model.Client;
@@ -34,6 +34,28 @@ public class ClientService implements MainReadService<Client, Long> {
                              String address,
                              Long cityId) {
 
+        String trimmedName = name.trim();
+        String trimmedLastName = lastName.trim();
+        String trimmedEgn = egn.trim();
+        String trimmedPhoneNumber = phoneNumber.trim();
+        String trimmedAddress = address.trim();
+
+        if (trimmedName.isBlank()
+                || trimmedLastName.isBlank()
+                || trimmedEgn.isBlank()
+                || trimmedPhoneNumber.isBlank()
+                || trimmedAddress.isBlank()) {
+            throw new InvalidDataException("Всички полета са задължителни.");
+        }
+
+        if (clientRepository.existsClientByEgn(trimmedEgn)) {
+            throw new InvalidDataException("Вече съществува клиент с това ЕГН.");
+        }
+
+        if (clientRepository.existsClientByPhoneNumber(trimmedPhoneNumber)) {
+            throw new InvalidDataException("Вече съществува клиент с този телефонен номер.");
+        }
+
         StoredProcedureQuery query = entityManager
                 .createStoredProcedureQuery("CLIENT_INS");
 
@@ -44,11 +66,11 @@ public class ClientService implements MainReadService<Client, Long> {
         query.registerStoredProcedureParameter("p_address", String.class, ParameterMode.IN);
         query.registerStoredProcedureParameter("p_city_id", Long.class, ParameterMode.IN);
 
-        query.setParameter("p_name", name);
-        query.setParameter("p_last_name", lastName);
-        query.setParameter("p_egn", egn);
-        query.setParameter("p_phone", phoneNumber);
-        query.setParameter("p_address", address);
+        query.setParameter("p_name", trimmedName);
+        query.setParameter("p_last_name", trimmedLastName);
+        query.setParameter("p_egn", trimmedEgn);
+        query.setParameter("p_phone", trimmedPhoneNumber);
+        query.setParameter("p_address", trimmedAddress);
         query.setParameter("p_city_id", cityId);
 
         query.execute();
@@ -110,26 +132,7 @@ public class ClientService implements MainReadService<Client, Long> {
         return clientRepository.findById(id);
     }
 
-    public List<Client> findByCityId(Long cityId)
-    {
-        return clientRepository.findByCity_Id(cityId);
-    }
 
-    public List<Client> findByNameContaining(String name)
-    {
-        return clientRepository.findByNameContainingIgnoreCase(name);
-    }
-
-    public List<Client> findByLastNameContaining(String lastName)
-    {
-        return clientRepository.findByLastNameContainingIgnoreCase(lastName);
-    }
-
-    public Client findByEgn(String egn)
-    {
-        return clientRepository.findByEgn(egn)
-                .orElseThrow(() ->new RuntimeException("Client with this EGN doesn't exist: " + egn));
-    }
 
     public List<AdminClientResponse> getAdminClients() {
 

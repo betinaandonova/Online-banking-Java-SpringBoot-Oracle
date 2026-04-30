@@ -86,30 +86,13 @@ public class ClientController extends BaseAdminController {
                             @RequestParam String phoneNumber,
                             @RequestParam String address,
                             @RequestParam Long cityId,
-                            HttpSession session,
-                            Model model) {
+                            HttpSession session) {
 
         if (isNotAdmin(session)) {
             return "redirect:/login";
         }
 
-        if (name.isBlank() || lastName.isBlank() || egn.isBlank()
-                || phoneNumber.isBlank() || address.isBlank()) {
-
-            model.addAttribute("errorMessage", "Всички полета са задължителни.");
-            model.addAttribute("cities", cityService.findAll());
-
-            return "admin-add-client";
-        }
-
-        try {
-            clientService.insertClient(name, lastName, egn, phoneNumber, address, cityId);
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", "Вече съществува клиент с това ЕГН или телефонен номер.");
-            model.addAttribute("cities", cityService.findAll());
-
-            return "admin-add-client";
-        }
+        clientService.insertClient(name, lastName, egn, phoneNumber, address, cityId);
 
         return "redirect:/admin/clients";
     }
