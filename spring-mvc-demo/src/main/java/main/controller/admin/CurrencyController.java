@@ -1,11 +1,7 @@
 package main.controller.admin;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.ParameterMode;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.StoredProcedureQuery;
 import jakarta.servlet.http.HttpSession;
-import main.repository.CurrencyTypeRepository;
+import main.service.CurrencyTypeService;
 import main.service.OnlineBankingUserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,15 +11,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin/currencies")
 public class CurrencyController extends BaseAdminController {
 
-    private final CurrencyTypeRepository currencyTypeRepository;
+    private final CurrencyTypeService currencyService;
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    public CurrencyController(CurrencyTypeRepository currencyTypeRepository,
+    public CurrencyController(CurrencyTypeService currencyService,
                               OnlineBankingUserService userService) {
         super(userService);
-        this.currencyTypeRepository = currencyTypeRepository;
+        this.currencyService = currencyService;
     }
 
     @GetMapping
@@ -32,78 +25,33 @@ public class CurrencyController extends BaseAdminController {
             return "redirect:/login";
         }
 
-        loadCurrenciesPage(model, null);
+        model.addAttribute("currencies", currencyService.findAll());
+
         return "admin-currencies";
     }
 
     @PostMapping("/add")
     public String addCurrency(@RequestParam String currencyShort,
                               @RequestParam String currency,
-                              HttpSession session,
-                              Model model) {
+                              HttpSession session) {
         if (isNotAdmin(session)) {
             return "redirect:/login";
         }
 
-        try {
-            executeCurrencyInsert(currencyShort, currency);
-            return "redirect:/admin/currencies";
+        currencyService.insertCurrency(currencyShort, currency);
 
-        } catch (Exception e) {
-            loadCurrenciesPage(model, "Грешка при добавяне на валута.");
-            return "admin-currencies";
-        }
+        return "redirect:/admin/currencies";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteCurrency(@PathVariable Long id,
-                                 HttpSession session,
-                                 Model model) {
+                                 HttpSession session) {
         if (isNotAdmin(session)) {
             return "redirect:/login";
         }
 
-        try {
-            executeCurrencyDelete(id);
-            return "redirect:/admin/currencies";
+        currencyService.deleteCurrency(id);
 
-        } catch (Exception e) {
-            loadCurrenciesPage(model, "Грешка при изтриване на валута.");
-            return "admin-currencies";
-        }
-    }
-
-    private void loadCurrenciesPage(Model model, String errorMessage) {
-        model.addAttribute("currencies", currencyTypeRepository.findAll());
-
-        if (errorMessage != null) {
-            model.addAttribute("errorMessage", errorMessage);
-        }
-    }
-
-    private void executeCurrencyInsert(String currencyShort, String currency) {
-        StoredProcedureQuery query = createProcedure("CURRENCY_INS");
-
-        query.registerStoredProcedureParameter("p_currency_short", String.class, ParameterMode.IN);
-        query.registerStoredProcedureParameter("p_currency", String.class, ParameterMode.IN);
-
-        query.setParameter("p_currency_short", currencyShort);
-        query.setParameter("p_currency", currency);
-
-        query.execute();
-    }
-
-    private void executeCurrencyDelete(Long id) {
-        StoredProcedureQuery query = createProcedure("CURRENCY_DEL");
-
-        query.registerStoredProcedureParameter("p_currency_id", Long.class, ParameterMode.IN);
-        query.setParameter("p_currency_id", id);
-
-        query.execute();
-    }
-
-
-    private StoredProcedureQuery createProcedure(String procedureName) {
-        return entityManager.createStoredProcedureQuery(procedureName);
+        return "redirect:/admin/currencies";
     }
 }

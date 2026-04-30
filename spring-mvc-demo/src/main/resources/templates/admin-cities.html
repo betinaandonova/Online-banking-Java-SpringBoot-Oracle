@@ -1,64 +1,74 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" type="text/css" href="/css/common.css">
     <link rel="stylesheet" type="text/css" href="/css/nav-side-bar.css">
     <link rel="stylesheet" type="text/css" href="/css/home-common.css">
     <link rel="stylesheet" type="text/css" href="/css/home.css">
     <link rel="stylesheet" type="text/css" href="/css/subscription-history.css">
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <title>Countries</title>
+
+    <title>Cities</title>
 </head>
 
 <body>
 <main>
-    <div th:replace="~{fragments/admin-sidebar :: adminSidebar('countries')}"></div>
+    <div th:replace="~{fragments/admin-sidebar :: adminSidebar('city')}"></div>
 
     <div class="home-section">
         <div class="single-section-box subscriptions-container">
 
             <div class="table-header admin-table-header">
 
-                <div class="table-actions">
-                    <form th:action="@{/admin/countries/add}" method="post" class="add-inline-form">
-                        <input type="text"
-                               name="countryName"
-                               placeholder="Country name"
-                               required>
+                <form th:action="@{/admin/cities/add}" method="post" class="add-inline-form">
+                    <input type="text"
+                           name="cityName"
+                           placeholder="City name"
+                           required>
 
-                        <button type="submit" class="btn add-btn">+ Add Country</button>
-                    </form>
-                </div>
+                    <select name="countryId" required>
+                        <option value="">Select country</option>
+                        <option th:each="country : ${countries}"
+                                th:value="${country.id}"
+                                th:text="${country.countryName}">
+                        </option>
+                    </select>
+
+                    <button type="submit" class="btn add-btn">+ Add City</button>
+                </form>
             </div>
 
             <table class="styled-table">
                 <thead>
                 <tr>
-                    <th>COUNTRY ID</th>
-                    <th>Country Name</th>
+                    <th>CITY ID</th>
+                    <th>City Name</th>
+                    <th>Country</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
 
                 <tbody>
-                <tr th:each="c : ${countries}">
+                <tr th:each="c : ${cities}">
 
-                    <!-- ID -->
                     <td th:text="${c.id}">1</td>
 
-                    <!-- NAME (само текст, не editable) -->
-                    <td th:text="${c.countryName}">Bulgaria</td>
+                    <td th:text="${c.cityName}">Sofia</td>
+
+                    <td th:text="${c.country.countryName}">Bulgaria</td>
 
                     <td class="action-buttons">
 
-                        <a th:href="@{/admin/countries/delete/{id}(id=${c.id})}"
+                        <a th:href="@{/admin/cities/delete/{id}(id=${c.id})}"
                            class="btn delete-btn"
-                           onclick="return confirm('Delete country: ' + '[[${c.countryName}]]' + '?')">
+                           onclick="return confirm('Delete city: ' + '[[${c.cityName}]]' + '?')">
                             Delete
                         </a>
 
@@ -71,6 +81,10 @@
         </div>
     </div>
 </main>
-<div class="footer"><p>© 2026 BSA Bank. All rights reserved.</p></div>
+
+<div class="footer">
+    <p>© 2026 BSA Bank. All rights reserved.</p>
+</div>
+
 </body>
 </html>

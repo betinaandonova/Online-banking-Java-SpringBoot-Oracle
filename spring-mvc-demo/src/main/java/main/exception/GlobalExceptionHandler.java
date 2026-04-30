@@ -15,7 +15,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public String handleGeneralException(Exception ex, Model model) {
-        model.addAttribute("errorMessage", "Възникна неочаквана грешка.");
+
+        ex.printStackTrace();
+
+        model.addAttribute(
+                "errorMessage",
+                "Тип грешка: " + ex.getClass().getSimpleName()
+                        + "\nСъобщение: " + ex.getMessage()
+        );
+
         return "error-popup";
     }
 }

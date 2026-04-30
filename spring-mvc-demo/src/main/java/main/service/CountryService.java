@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
+import main.exception.InvalidDataException;
 import main.model.Country;
 import main.model.Employee;
 import main.repository.CountryRepository;
@@ -27,9 +28,14 @@ public class CountryService implements MainReadService<Country, Long> {
     @Transactional
     public void insertCountry(String countryName) {
 
-        // ✅ ВАЛИДАЦИЯ
-        if (countryName == null || countryName.trim().isEmpty()) {
-            throw new RuntimeException("Country name cannot be empty");
+        String trimmedCountryName = countryName == null ? "" : countryName.trim();
+
+        if (trimmedCountryName.isBlank()) {
+            throw new InvalidDataException("Името на държавата е задължително.");
+        }
+
+        if (countryRepository.existsCountryByName(trimmedCountryName)) {
+            throw new InvalidDataException("Вече съществува държава с това име.");
         }
 
         StoredProcedureQuery query = entityManager
@@ -37,7 +43,7 @@ public class CountryService implements MainReadService<Country, Long> {
 
         query.registerStoredProcedureParameter("p_country_name", String.class, ParameterMode.IN);
 
-        query.setParameter("p_country_name", countryName);
+        query.setParameter("p_country_name", trimmedCountryName);
 
         query.execute();
     }
