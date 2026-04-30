@@ -1,4 +1,4 @@
-package main.controller;
+package main.controller.client;
 
 import jakarta.servlet.http.HttpSession;
 import main.dto.UserProfileResponse;
@@ -11,11 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * Handles navigation to main application pages.
- *
  * Responsibilities:
  * - Client home page
  * - Admin home page
- *
  * Performs access control based on user role.
  */
 

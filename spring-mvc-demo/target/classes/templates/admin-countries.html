@@ -119,7 +119,7 @@
 
                         <a th:href="@{/admin/countries/delete/{id}(id=${c.id})}"
                            class="btn delete-btn"
-                           onclick="return confirm('Are you sure?')">
+                           onclick="return confirm('Delete country: ' + '[[${c.countryName}]]' + '?')">
                             Delete
                         </a>
 

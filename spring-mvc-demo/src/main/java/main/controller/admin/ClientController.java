@@ -1,11 +1,8 @@
-package main.controller;
+package main.controller.admin;
 
 import jakarta.servlet.http.HttpSession;
-import main.model.Client;
-import main.model.OnlineBankingUser;
 import main.service.ClientService;
 import main.service.OnlineBankingUserService;
-import main.util.AuthUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,46 +15,37 @@ import main.service.CityService;
 
 /**
  * Controller for admin client management pages.
- *
  * Responsibilities:
  * - Display all clients
  * - Provide client data to admin UI
- *
  * Access:
  * - Only available to admin users
  */
 
 
 @Controller
-public class AdminClientController {
+public class ClientController extends BaseAdminController {
 
     private final ClientService clientService;
-    private final OnlineBankingUserService userService;
     private final CityService cityService;
 
-    public AdminClientController(ClientService clientService,
-                                 OnlineBankingUserService userService, CityService cityService) {
+    public ClientController(ClientService clientService,
+                            OnlineBankingUserService userService,
+                            CityService cityService) {
+        super(userService);
         this.clientService = clientService;
-        this.userService = userService;
         this.cityService = cityService;
     }
 
     @GetMapping("/admin/clients")
     public String clientsPage(HttpSession session, Model model) {
-        Long userId = (Long) session.getAttribute("userId");
-
-        if (userId == null) {
-            return "redirect:/login";
-        }
-
-        OnlineBankingUser user = userService.findById(userId).orElse(null);
-
-        if (user == null || !AuthUtil.isAdmin(user)) {
+        if (isNotAdmin(session)) {
             return "redirect:/login";
         }
 
         model.addAttribute("clients", clientService.getAdminClients());
         model.addAttribute("cities", cityService.findAll());
+
         return "admin-clients";
     }
 
@@ -69,37 +57,20 @@ public class AdminClientController {
                              @RequestParam String address,
                              @RequestParam Long cityId) {
 
-        clientService.updateClient(
-                id,
-                name,
-                lastName,
-                phoneNumber,
-                address,
-                cityId
-        );
+        clientService.updateClient(id, name, lastName, phoneNumber, address, cityId);
 
         return "redirect:/admin/clients";
     }
 
     @GetMapping("/admin/clients/delete/{id}")
     public String deleteClient(@PathVariable Long id) {
-
         clientService.deleteClient(id);
-
         return "redirect:/admin/clients";
     }
 
     @GetMapping("/admin/clients/add")
     public String addClientPage(HttpSession session, Model model) {
-        Long userId = (Long) session.getAttribute("userId");
-
-        if (userId == null) {
-            return "redirect:/login";
-        }
-
-        OnlineBankingUser user = userService.findById(userId).orElse(null);
-
-        if (user == null || !AuthUtil.isAdmin(user)) {
+        if (isNotAdmin(session)) {
             return "redirect:/login";
         }
 
@@ -114,24 +85,30 @@ public class AdminClientController {
                             @RequestParam String egn,
                             @RequestParam String phoneNumber,
                             @RequestParam String address,
-                            @RequestParam Long cityId) {
+                            @RequestParam Long cityId,
+                            HttpSession session,
+                            Model model) {
+
+        if (isNotAdmin(session)) {
+            return "redirect:/login";
+        }
 
         if (name.isBlank() || lastName.isBlank() || egn.isBlank()
                 || phoneNumber.isBlank() || address.isBlank()) {
-            return "redirect:/admin/clients/add?error=empty";
+
+            model.addAttribute("errorMessage", "Всички полета са задължителни.");
+            model.addAttribute("cities", cityService.findAll());
+
+            return "admin-add-client";
         }
 
         try {
-            clientService.insertClient(
-                    name,
-                    lastName,
-                    egn,
-                    phoneNumber,
-                    address,
-                    cityId
-            );
+            clientService.insertClient(name, lastName, egn, phoneNumber, address, cityId);
         } catch (Exception e) {
-            return "redirect:/admin/clients/add?error=egnTaken";
+            model.addAttribute("errorMessage", "Вече съществува клиент с това ЕГН или телефонен номер.");
+            model.addAttribute("cities", cityService.findAll());
+
+            return "admin-add-client";
         }
 
         return "redirect:/admin/clients";
