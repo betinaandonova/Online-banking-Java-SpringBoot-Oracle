@@ -107,12 +107,32 @@ public class AccountService implements MainReadService<Account, Long>{
             return mapAccountsToDto(accountRepository.findAll());
         }
 
+        String trimmedValue = searchValue.trim();
+
         return switch (searchType) {
-            case CLIENT_ID -> callProcedure("ACC_SEARCH_BY_CLIENT_ID", "p_client_id", Long.valueOf(searchValue));
-            case FIRST_NAME -> callProcedure("ACC_SEARCH_BY_FIRST_NAME", "p_first_name", searchValue);
-            case LAST_NAME -> callProcedure("ACC_SEARCH_BY_LAST_NAME", "p_last_name", searchValue);
-            case EGN -> callProcedure("ACC_SEARCH_BY_EGN", "p_egn", searchValue);
-            case PHONE -> callProcedure("ACC_SEARCH_BY_PHONE", "p_phone", searchValue);
+            case CLIENT_ID -> callProcedure(
+                    "ACC_SEARCH_BY_CLIENT_ID",
+                    "p_client_id",
+                    Long.valueOf(trimmedValue)
+            );
+
+            case NAME -> callProcedure(
+                    "ACC_SEARCH_BY_NAME",
+                    "p_name",
+                    trimmedValue
+            );
+
+            case EGN -> callProcedure(
+                    "ACC_SEARCH_BY_EGN",
+                    "p_egn",
+                    trimmedValue
+            );
+
+            case PHONE -> callProcedure(
+                    "ACC_SEARCH_BY_PHONE",
+                    "p_phone",
+                    trimmedValue
+            );
         };
     }
 
@@ -123,14 +143,14 @@ public class AccountService implements MainReadService<Account, Long>{
         StoredProcedureQuery query = entityManager.createStoredProcedureQuery(procedureName);
 
         if (paramValue instanceof Long) {
-            query.registerStoredProcedureParameter(paramName, Long.class, ParameterMode.IN);
+            query.registerStoredProcedureParameter(paramName, BigDecimal.class, ParameterMode.IN);
+            query.setParameter(paramName, BigDecimal.valueOf((Long) paramValue));
         } else {
             query.registerStoredProcedureParameter(paramName, String.class, ParameterMode.IN);
+            query.setParameter(paramName, paramValue);
         }
 
         query.registerStoredProcedureParameter("p_result", void.class, ParameterMode.REF_CURSOR);
-
-        query.setParameter(paramName, paramValue);
 
         query.execute();
 
@@ -145,45 +165,31 @@ public class AccountService implements MainReadService<Account, Long>{
     }
 
     private AdminAccountResponse mapRowToDto(Object[] row) {
-
         AdminAccountResponse dto = new AdminAccountResponse();
 
-        dto.setAccountId(((Number) row[0]).longValue());
-        dto.setIban((String) row[1]);
-        dto.setAvailability((BigDecimal) row[2]);
-
-        dto.setClientId(((Number) row[3]).longValue());
-
-        String firstName = (String) row[4];
-        String lastName = (String) row[5];
-        dto.setClientFullName(firstName + " " + lastName);
-
-        dto.setEgn((String) row[6]);
-        dto.setPhoneNumber((String) row[7]);
-
-        dto.setCurrencyShort((String) row[8]);
-        dto.setCurrency((String) row[9]);
+        dto.setAccountId(((BigDecimal) row[0]).longValue());
+        dto.setClientId(((BigDecimal) row[1]).longValue());
+        dto.setClientFullName((String) row[2]);
+        dto.setEgn((String) row[3]);
+        dto.setPhoneNumber((String) row[4]);
+        dto.setIban((String) row[5]);
+        dto.setCurrencyShort((String) row[6]);
+        dto.setAvailability((BigDecimal) row[7]);
 
         return dto;
     }
 
     private List<AdminAccountResponse> mapAccountsToDto(List<Account> accounts) {
-
         return accounts.stream().map(account -> {
             AdminAccountResponse dto = new AdminAccountResponse();
 
             dto.setAccountId(account.getId());
             dto.setIban(account.getIban());
             dto.setAvailability(account.getAvailability());
-
             dto.setClientId(account.getClient().getId());
-            dto.setClientFullName(
-                    account.getClient().getName() + " " + account.getClient().getLastName()
-            );
-
+            dto.setClientFullName(account.getClient().getName() + " " + account.getClient().getLastName());
             dto.setEgn(account.getClient().getEgn());
             dto.setPhoneNumber(account.getClient().getPhoneNumber());
-
             dto.setCurrencyShort(account.getCurrency().getCurrencyShort());
             dto.setCurrency(account.getCurrency().getCurrency());
 

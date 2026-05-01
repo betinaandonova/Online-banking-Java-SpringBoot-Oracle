@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -52,7 +53,23 @@ public class AccountController extends BaseAdminController {
             return "redirect:/login";
         }
 
-        loadAccountsPage(model, searchType, searchValue, null);
+        try {
+            loadAccountsPage(model, searchType, searchValue, null);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            List<AdminAccountResponse> accounts = accountService.searchAccounts(null, null);
+
+            model.addAttribute("accounts", accounts);
+            model.addAttribute("searchType", searchType);
+            model.addAttribute("searchValue", searchValue);
+            model.addAttribute("searchTypes", AccountSearchType.values());
+            model.addAttribute(
+                    "errorMessage",
+                    "Грешка при търсене на сметки. Проверете избрания филтър или въведената стойност."
+            );
+        }
 
         return "admin-accounts";
     }
@@ -74,7 +91,7 @@ public class AccountController extends BaseAdminController {
                              @RequestParam BigDecimal availability,
                              @RequestParam String iban,
                              HttpSession session,
-                             Model model) {
+                             RedirectAttributes redirectAttributes) {
 
         if (isNotAdmin(session)) {
             return "redirect:/login";
@@ -82,19 +99,28 @@ public class AccountController extends BaseAdminController {
 
         try {
             accountService.insertAccount(clientId, currencyId, availability, iban);
+
+            redirectAttributes.addFlashAttribute(
+                    "successMessage",
+                    "Сметката беше добавена успешно."
+            );
+
             return "redirect:/admin/accounts";
 
         } catch (Exception e) {
-            loadAccountForm(model, "Грешка при добавяне на сметка.");
-            return "admin-account-add";
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    e.getMessage()
+            );
+
+            return "redirect:/admin/accounts/add";
         }
     }
-
     @PostMapping("/admin/accounts/edit/{id}")
     public String updateAvailability(@PathVariable Long id,
                                      @RequestParam BigDecimal availability,
                                      HttpSession session,
-                                     Model model) {
+                                     RedirectAttributes redirectAttributes) {
 
         if (isNotAdmin(session)) {
             return "redirect:/login";
@@ -102,18 +128,26 @@ public class AccountController extends BaseAdminController {
 
         try {
             accountService.updateAccountAvailability(id, availability);
-            return "redirect:/admin/accounts";
+
+            redirectAttributes.addFlashAttribute(
+                    "successMessage",
+                    "Сметката беше редактирана успешно."
+            );
 
         } catch (Exception e) {
-            loadAccountsPage(model, null, null, "Грешка при редакция на сметка.");
-            return "admin-accounts";
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    e.getMessage()
+            );
         }
+
+        return "redirect:/admin/accounts";
     }
 
-    @GetMapping("/admin/accounts/delete/{id}")
+    @PostMapping("/admin/accounts/delete/{id}")
     public String deleteAccount(@PathVariable Long id,
                                 HttpSession session,
-                                Model model) {
+                                RedirectAttributes redirectAttributes) {
 
         if (isNotAdmin(session)) {
             return "redirect:/login";
@@ -121,12 +155,20 @@ public class AccountController extends BaseAdminController {
 
         try {
             accountService.deleteAccount(id);
-            return "redirect:/admin/accounts";
+
+            redirectAttributes.addFlashAttribute(
+                    "successMessage",
+                    "Сметката беше изтрита успешно."
+            );
 
         } catch (Exception e) {
-            loadAccountsPage(model, null, null, "Грешка при изтриване на сметка.");
-            return "admin-accounts";
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    "Сметката не може да бъде изтрита, защото има свързани транзакции."
+            );
         }
+
+        return "redirect:/admin/accounts";
     }
 
     private void loadAccountsPage(Model model,

@@ -2,8 +2,7 @@ package main.enums;
 
 public enum AccountSearchType {
     CLIENT_ID("Client ID"),
-    FIRST_NAME("First name"),
-    LAST_NAME("Last name"),
+    NAME("Name"),
     EGN("EGN"),
     PHONE("Phone number");
 

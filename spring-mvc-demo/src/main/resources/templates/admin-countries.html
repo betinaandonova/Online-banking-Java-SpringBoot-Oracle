@@ -2,6 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="data:,">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
@@ -56,11 +57,18 @@
 
                     <td class="action-buttons">
 
-                        <a th:href="@{/admin/countries/delete/{id}(id=${c.id})}"
-                           class="btn delete-btn"
-                           onclick="return confirm('Delete country: ' + '[[${c.countryName}]]' + '?')">
+                    <td class="action-buttons">
+
+                    <form th:action="@{/admin/countries/delete/{id}(id=${c.id})}" method="post" class="delete-form">
+                        <button type="button"
+                                class="btn delete-btn"
+                                th:attr="data-delete-name=${c.countryName}"
+                                onclick="openDeleteModal(this)">
                             Delete
-                        </a>
+                        </button>
+                    </form>
+
+                    </td>
 
                     </td>
 
@@ -70,6 +78,8 @@
 
         </div>
     </div>
+    <div th:replace="~{fragments/error-popup :: popupMessages}"></div>
+    <div th:replace="~{fragments/confirm-delete-modal :: confirmDeleteModal}"></div>
 </main>
 <div class="footer"><p>© 2026 BSA Bank. All rights reserved.</p></div>
 </body>

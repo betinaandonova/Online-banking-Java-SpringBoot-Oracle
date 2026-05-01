@@ -7,6 +7,7 @@ import main.service.OnlineBankingUserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class CityController extends BaseAdminController {
@@ -85,5 +86,32 @@ public class CityController extends BaseAdminController {
     private void loadCitiesPage(Model model) {
         model.addAttribute("cities", cityService.findAll());
         model.addAttribute("countries", countryService.findAll());
+    }
+
+    @PostMapping("/admin/cities/delete/{id}")
+    public String deleteCity(@PathVariable Long id,
+                             HttpSession session,
+                             RedirectAttributes redirectAttributes) {
+
+        if (isNotAdmin(session)) {
+            return "redirect:/login";
+        }
+
+        try {
+            cityService.deleteCity(id);
+
+            redirectAttributes.addFlashAttribute(
+                    "successMessage",
+                    "Градът беше изтрит успешно."
+            );
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    "Градът не може да бъде изтрит, защото се използва."
+            );
+        }
+
+        return "redirect:/admin/cities";
     }
 }

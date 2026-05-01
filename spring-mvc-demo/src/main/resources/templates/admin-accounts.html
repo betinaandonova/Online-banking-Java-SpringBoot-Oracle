@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="data:,">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
@@ -12,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="/css/home.css">
     <link rel="stylesheet" type="text/css" href="/css/subscription-history.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <title>Transactions</title>
+    <title>Accounts</title>
 </head>
 
 <body>
@@ -46,14 +47,15 @@
                         Clear
                     </a>
 
-                    <div id="filtersPanel" style="display:none; margin-top: 12px;">
+                    <div id="filtersPanel"
+                         th:style="${searchType != null} ? 'display:block; margin-top: 12px;' : 'display:none; margin-top: 12px;'">
                         <select name="searchType" class="edit-input">
                             <option value="">Search by</option>
 
                             <option th:each="type : ${searchTypes}"
                                     th:value="${type.name()}"
                                     th:text="${type.label}"
-                                    th:selected="${type.name() == searchType?.name()}">
+                                    th:selected="${searchType != null and type.name() == searchType.name()}">
                             </option>
                         </select>
                     </div>
@@ -126,11 +128,14 @@
                             Save
                         </button>
 
-                        <a th:href="@{/admin/accounts/delete/{id}(id=${a.accountId})}"
-                           class="btn delete-btn"
-                           onclick="return confirm('Are you sure?')">
-                            Delete
-                        </a>
+                        <form th:action="@{/admin/accounts/delete/{id}(id=${a.accountId})}" method="post" class="delete-form">
+                            <button type="button"
+                                    class="btn delete-btn"
+                                    th:attr="data-delete-name=${a.iban}"
+                                    onclick="openDeleteModal(this)">
+                                Delete
+                            </button>
+                        </form>
 
                     </td>
 
@@ -140,8 +145,13 @@
 
         </div>
     </div>
+
+    <div th:replace="~{fragments/error-popup :: popupMessages}"></div>
+    <div th:replace="~{fragments/confirm-delete-modal :: confirmDeleteModal}"></div>
 </main>
+
 <div class="footer"><p>© 2026 BSA Bank. All rights reserved.</p></div>
+
 <script>
     function enableEdit(button) {
         const row = button.closest("tr");

@@ -1,0 +1,66 @@
+<div th:fragment="confirmDeleteModal" id="deleteModal" class="confirm-modal-overlay">
+    <div class="confirm-modal">
+        <div class="confirm-icon">!</div>
+
+        <h3>Потвърждение</h3>
+
+        <p>
+            Сигурни ли сте, че искате да изтриете
+            <strong id="deleteItemName">този запис</strong>?
+        </p>
+
+        <div class="confirm-actions">
+            <button type="button" class="cancel-btn" onclick="closeDeleteModal()">
+                Отказ
+            </button>
+
+            <button type="button" class="confirm-delete-btn" onclick="submitDeleteForm()">
+                Изтрий
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let formToDelete = null;
+
+        function openDeleteModal(button) {
+            formToDelete = button.closest("form");
+
+            const itemName = button.getAttribute("data-delete-name");
+            const itemText = document.getElementById("deleteItemName");
+
+            if (itemName && itemText) {
+                itemText.textContent = itemName;
+            } else if (itemText) {
+                itemText.textContent = "този запис";
+            }
+
+            document.getElementById("deleteModal").classList.add("show");
+        }
+
+        function closeDeleteModal() {
+            document.getElementById("deleteModal").classList.remove("show");
+            formToDelete = null;
+        }
+
+        function submitDeleteForm() {
+            if (formToDelete) {
+                formToDelete.submit();
+            }
+        }
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                closeDeleteModal();
+            }
+        });
+
+        document.addEventListener("click", function (event) {
+            const modal = document.getElementById("deleteModal");
+
+            if (modal && event.target === modal) {
+                closeDeleteModal();
+            }
+        });
+    </script>
+</div>

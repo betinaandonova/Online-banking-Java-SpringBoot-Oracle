@@ -1,7 +1,7 @@
 package main.controller.admin;
 
 import jakarta.servlet.http.HttpSession;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import main.service.CountryService;
 import main.service.OnlineBankingUserService;
 import org.springframework.stereotype.Controller;
@@ -37,7 +37,7 @@ public class CountryController extends BaseAdminController {
     @PostMapping("/admin/countries/add")
     public String addCountry(@RequestParam String countryName,
                              HttpSession session,
-                             Model model) {
+                             RedirectAttributes redirectAttributes) {
 
         if (isNotAdmin(session)) {
             return "redirect:/login";
@@ -45,14 +45,21 @@ public class CountryController extends BaseAdminController {
 
         try {
             countryService.insertCountry(countryName);
+
+            redirectAttributes.addFlashAttribute(
+                    "successMessage",
+                    "Държавата беше добавена успешно."
+            );
+
             return "redirect:/admin/countries";
 
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Грешка при добавяне на държава.");
-            model.addAttribute("countries", countryService.getCountries(null));
-            model.addAttribute("searchValue", null);
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    e.getMessage()
+            );
 
-            return "admin-countries";
+            return "redirect:/admin/countries";
         }
     }
 
@@ -60,7 +67,7 @@ public class CountryController extends BaseAdminController {
     public String editCountry(@PathVariable Long id,
                               @RequestParam String countryName,
                               HttpSession session,
-                              Model model) {
+                              RedirectAttributes redirectAttributes) {
 
         if (isNotAdmin(session)) {
             return "redirect:/login";
@@ -68,21 +75,28 @@ public class CountryController extends BaseAdminController {
 
         try {
             countryService.updateCountry(id, countryName);
+
+            redirectAttributes.addFlashAttribute(
+                    "successMessage",
+                    "Държавата беше редактирана успешно."
+            );
+
             return "redirect:/admin/countries";
 
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Грешка при редакция на държава.");
-            model.addAttribute("countries", countryService.getCountries(null));
-            model.addAttribute("searchValue", null);
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    "Грешка при редакция на държава."
+            );
 
-            return "admin-countries";
+            return "redirect:/admin/countries";
         }
     }
 
-    @GetMapping("/admin/countries/delete/{id}")
+    @PostMapping("/admin/countries/delete/{id}")
     public String deleteCountry(@PathVariable Long id,
                                 HttpSession session,
-                                Model model) {
+                                RedirectAttributes redirectAttributes) {
 
         if (isNotAdmin(session)) {
             return "redirect:/login";
@@ -90,14 +104,19 @@ public class CountryController extends BaseAdminController {
 
         try {
             countryService.deleteCountry(id);
-            return "redirect:/admin/countries";
+
+            redirectAttributes.addFlashAttribute(
+                    "successMessage",
+                    "Държавата беше изтрита успешно."
+            );
 
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Грешка при изтриване на държава.");
-            model.addAttribute("countries", countryService.getCountries(null));
-            model.addAttribute("searchValue", null);
-
-            return "admin-countries";
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    "Държавата не може да бъде изтрита, защото се използва от град."
+            );
         }
+
+        return "redirect:/admin/countries";
     }
 }

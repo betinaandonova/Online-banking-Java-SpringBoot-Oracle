@@ -61,11 +61,14 @@
                     <td th:text="${c.currency}">Bulgarian Lev</td>
 
                     <td class="action-buttons">
-                        <a th:href="@{/admin/currencies/delete/{id}(id=${c.id})}"
-                           class="btn delete-btn"
-                           onclick="return confirm('Are you sure?')">
-                            Delete
-                        </a>
+                        <form th:action="@{/admin/currencies/delete/{id}(id=${c.id})}" method="post" class="delete-form">
+                            <button type="button"
+                                    class="btn delete-btn"
+                                    th:attr="data-delete-name=${c.currencyShort + ' - ' + c.currency}"
+                                    onclick="openDeleteModal(this)">
+                                Delete
+                            </button>
+                        </form>
                     </td>
 
                 </tr>
@@ -74,6 +77,8 @@
 
         </div>
     </div>
+    <div th:replace="~{fragments/error-popup :: popupMessages}"></div>
+    <div th:replace="~{fragments/confirm-delete-modal :: confirmDeleteModal}"></div>
 </main>
 <div class="footer"><p>© 2026 BSA Bank. All rights reserved.</p></div>
 <script>

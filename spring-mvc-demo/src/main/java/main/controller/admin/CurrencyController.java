@@ -6,6 +6,7 @@ import main.service.OnlineBankingUserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/admin/currencies")
@@ -33,24 +34,54 @@ public class CurrencyController extends BaseAdminController {
     @PostMapping("/add")
     public String addCurrency(@RequestParam String currencyShort,
                               @RequestParam String currency,
-                              HttpSession session) {
+                              HttpSession session,
+                              RedirectAttributes redirectAttributes) {
+
         if (isNotAdmin(session)) {
             return "redirect:/login";
         }
 
-        currencyService.insertCurrency(currencyShort, currency);
+        try {
+            currencyService.insertCurrency(currencyShort, currency);
+
+            redirectAttributes.addFlashAttribute(
+                    "successMessage",
+                    "Валутата беше добавена успешно."
+            );
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    e.getMessage()
+            );
+        }
 
         return "redirect:/admin/currencies";
     }
 
-    @GetMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public String deleteCurrency(@PathVariable Long id,
-                                 HttpSession session) {
+                                 HttpSession session,
+                                 RedirectAttributes redirectAttributes) {
+
         if (isNotAdmin(session)) {
             return "redirect:/login";
         }
 
-        currencyService.deleteCurrency(id);
+        try {
+            currencyService.deleteCurrency(id);
+
+            redirectAttributes.addFlashAttribute(
+                    "successMessage",
+                    "Валутата беше изтрита успешно."
+            );
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    "Валутата не може да бъде изтрита, защото се използва."
+            );
+        }
 
         return "redirect:/admin/currencies";
     }

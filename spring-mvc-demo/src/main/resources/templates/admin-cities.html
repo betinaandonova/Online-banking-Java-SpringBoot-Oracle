@@ -66,11 +66,14 @@
 
                     <td class="action-buttons">
 
-                        <a th:href="@{/admin/cities/delete/{id}(id=${c.id})}"
-                           class="btn delete-btn"
-                           onclick="return confirm('Delete city: ' + '[[${c.cityName}]]' + '?')">
-                            Delete
-                        </a>
+                        <form th:action="@{/admin/cities/delete/{id}(id=${c.id})}" method="post" class="delete-form">
+                            <button type="button"
+                                    class="btn delete-btn"
+                                    th:attr="data-delete-name=${c.cityName}"
+                                    onclick="openDeleteModal(this)">
+                                Delete
+                            </button>
+                        </form>
 
                     </td>
 
@@ -80,6 +83,7 @@
 
         </div>
     </div>
+    <div th:replace="~{fragments/confirm-delete-modal :: confirmDeleteModal}"></div>
 </main>
 
 <div class="footer">

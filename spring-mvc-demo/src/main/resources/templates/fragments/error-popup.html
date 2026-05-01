@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="popupMessages">
+
+    <div th:if="${errorMessage}" id="errorToast" class="toast toast-error show">
+        <div class="toast-icon">⚠</div>
+
+        <div class="toast-content">
+            <div class="toast-title">Error</div>
+            <div class="toast-message" th:text="${errorMessage}">Something went wrong.</div>
+        </div>
+
+        <button class="toast-close" onclick="closeToast('errorToast')">&times;</button>
+    </div>
+
+    <div th:if="${successMessage}" id="successToast" class="toast toast-success show">
+        <div class="toast-icon">✓</div>
+
+        <div class="toast-content">
+            <div class="toast-title">Success</div>
+            <div class="toast-message" th:text="${successMessage}">Operation completed successfully.</div>
+        </div>
+
+        <button class="toast-close" onclick="closeToast('successToast')">&times;</button>
+    </div>
+
+    <script>
+        function closeToast(id) {
+            const toast = document.getElementById(id);
+
+            if (toast) {
+                toast.classList.add("hide");
+                setTimeout(() => toast.remove(), 300);
+            }
+        }
+
+        window.addEventListener("load", () => {
+            const errorToast = document.getElementById("errorToast");
+            const successToast = document.getElementById("successToast");
+
+            if (errorToast) {
+                setTimeout(() => closeToast("errorToast"), 4000);
+            }
+
+            if (successToast) {
+                setTimeout(() => closeToast("successToast"), 3500);
+            }
+        });
+    </script>
+
+</div>
+
+</body>
+</html>
