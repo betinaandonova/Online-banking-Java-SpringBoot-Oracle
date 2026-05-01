@@ -53,27 +53,6 @@ public class AccountService implements MainReadService<Account, Long>{
         query.execute();
     }
 
-    @Transactional
-    public void updateAccount(Long accountId,
-                              Long currencyId,
-                              BigDecimal availability,
-                              String iban) {
-
-        StoredProcedureQuery query = entityManager
-                .createStoredProcedureQuery("ACCOUNT_UPD");
-
-        query.registerStoredProcedureParameter("p_account_id", Long.class, ParameterMode.IN);
-        query.registerStoredProcedureParameter("p_currency_id", Long.class, ParameterMode.IN);
-        query.registerStoredProcedureParameter("p_availability", BigDecimal.class, ParameterMode.IN);
-        query.registerStoredProcedureParameter("p_iban", String.class, ParameterMode.IN);
-
-        query.setParameter("p_account_id", accountId);
-        query.setParameter("p_currency_id", currencyId);
-        query.setParameter("p_availability", availability);
-        query.setParameter("p_iban", iban);
-
-        query.execute();
-    }
 
 
     // ======================
@@ -86,10 +65,6 @@ public class AccountService implements MainReadService<Account, Long>{
         return accountRepository.findByClient_Id(clientId);
     }
 
-    public Account findByIban(String iban) {
-        return accountRepository.findByIban(iban)
-                .orElseThrow(() -> new RuntimeException("Account not found with IBAN: " + iban));
-    }
 
     @Override
     public List<Account> findAll() {
@@ -154,6 +129,7 @@ public class AccountService implements MainReadService<Account, Long>{
 
         query.execute();
 
+        @SuppressWarnings("unchecked")
         List<Object[]> rows = query.getResultList();
         List<AdminAccountResponse> result = new ArrayList<>();
 

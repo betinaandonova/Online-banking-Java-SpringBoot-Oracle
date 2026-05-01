@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import main.service.CityService;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 /**
@@ -50,23 +50,37 @@ public class ClientController extends BaseAdminController {
     }
 
     @PostMapping("/admin/clients/edit/{id}")
-    public String editClient(@PathVariable Long id,
-                             @RequestParam String name,
-                             @RequestParam String lastName,
-                             @RequestParam String phoneNumber,
-                             @RequestParam String address,
-                             @RequestParam Long cityId) {
+    public String updateClient(@PathVariable Long id,
+                               @RequestParam String name,
+                               @RequestParam String lastName,
+                               @RequestParam String phoneNumber,
+                               @RequestParam String address,
+                               @RequestParam Long cityId,
+                               HttpSession session,
+                               RedirectAttributes redirectAttributes) {
 
-        clientService.updateClient(id, name, lastName, phoneNumber, address, cityId);
+        if (isNotAdmin(session)) {
+            return "redirect:/login";
+        }
+
+        try {
+            clientService.updateClient(id, name, lastName, phoneNumber, address, cityId);
+
+            redirectAttributes.addFlashAttribute(
+                    "successMessage",
+                    "Клиентът беше редактиран успешно."
+            );
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    e.getMessage()
+            );
+        }
 
         return "redirect:/admin/clients";
     }
 
-    @GetMapping("/admin/clients/delete/{id}")
-    public String deleteClient(@PathVariable Long id) {
-        clientService.deleteClient(id);
-        return "redirect:/admin/clients";
-    }
 
     @GetMapping("/admin/clients/add")
     public String addClientPage(HttpSession session, Model model) {
@@ -86,13 +100,56 @@ public class ClientController extends BaseAdminController {
                             @RequestParam String phoneNumber,
                             @RequestParam String address,
                             @RequestParam Long cityId,
-                            HttpSession session) {
+                            HttpSession session,
+                            RedirectAttributes redirectAttributes) {
 
         if (isNotAdmin(session)) {
             return "redirect:/login";
         }
 
-        clientService.insertClient(name, lastName, egn, phoneNumber, address, cityId);
+        try {
+            clientService.insertClient(name, lastName, egn, phoneNumber, address, cityId);
+
+            redirectAttributes.addFlashAttribute(
+                    "successMessage",
+                    "Клиентът беше добавен успешно."
+            );
+
+            return "redirect:/admin/clients";
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    e.getMessage()
+            );
+
+            return "redirect:/admin/clients/add";
+        }
+    }
+
+    @PostMapping("/admin/clients/delete/{id}")
+    public String deleteClient(@PathVariable Long id,
+                               HttpSession session,
+                               RedirectAttributes redirectAttributes) {
+
+        if (isNotAdmin(session)) {
+            return "redirect:/login";
+        }
+
+        try {
+            clientService.deleteClient(id);
+
+            redirectAttributes.addFlashAttribute(
+                    "successMessage",
+                    "Клиентът беше изтрит успешно."
+            );
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    e.getMessage()
+            );
+        }
 
         return "redirect:/admin/clients";
     }

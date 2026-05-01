@@ -1,7 +1,6 @@
 package main.controller.admin;
 
 import jakarta.servlet.http.HttpSession;
-import main.model.OnlineBankingUser;
 import main.service.OnlineBankingUserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,21 +8,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-/**
- * Controller for admin user management pages.
- * Responsibilities:
- * - Display all online banking users
- * - Provide user data to admin UI
- * Access:
- * - Only available to admin users
- */
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class UserController extends BaseAdminController {
 
-    public UserController(OnlineBankingUserService userService) {
-        super(userService);
+    private final OnlineBankingUserService onlineBankingUserService;
+
+    public UserController(OnlineBankingUserService onlineBankingUserService) {
+        super(onlineBankingUserService);
+        this.onlineBankingUserService = onlineBankingUserService;
     }
 
     @GetMapping("/admin/users")
@@ -32,7 +26,7 @@ public class UserController extends BaseAdminController {
             return "redirect:/login";
         }
 
-        model.addAttribute("users", userService.findAll());
+        model.addAttribute("users", onlineBankingUserService.findAll());
         return "admin-users";
     }
 
@@ -42,98 +36,95 @@ public class UserController extends BaseAdminController {
             return "redirect:/login";
         }
 
-        model.addAttribute("clients", userService.getClientsWithoutUser());
+        model.addAttribute("clients", onlineBankingUserService.getClientsWithoutUser());
         return "admin-add-user";
     }
 
     @PostMapping("/admin/users/add")
-    public String addUser(@RequestParam Long clientId,
+    public String addUser(@RequestParam(required = false) Long clientId,
+                          @RequestParam(required = false) Long employeeId,
                           @RequestParam String username,
                           @RequestParam String password,
                           HttpSession session,
-                          Model model) {
+                          RedirectAttributes redirectAttributes) {
 
         if (isNotAdmin(session)) {
             return "redirect:/login";
         }
 
         try {
-            userService.createClientUser(
-                    clientId,
-                    username.trim(),
-                    password.trim()
+            onlineBankingUserService.insertOnlineUser(clientId, employeeId, username, password);
+
+            redirectAttributes.addFlashAttribute(
+                    "successMessage",
+                    "Потребителят беше добавен успешно."
             );
 
             return "redirect:/admin/users";
 
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Грешка при създаване на потребител.");
-            model.addAttribute("clients", userService.getClientsWithoutUser());
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    e.getMessage()
+            );
 
-            return "admin-add-user";
+            return "redirect:/admin/users/add";
         }
     }
-
 
     @PostMapping("/admin/users/edit/{id}")
-    public String editUser(@PathVariable Long id,
-                           @RequestParam String username,
-                           @RequestParam(required = false) String password,
-                           HttpSession session,
-                           Model model) {
+    public String updateUser(@PathVariable Long id,
+                             @RequestParam String username,
+                             @RequestParam(required = false) String password,
+                             HttpSession session,
+                             RedirectAttributes redirectAttributes) {
 
         if (isNotAdmin(session)) {
             return "redirect:/login";
         }
 
-        OnlineBankingUser userToEdit = userService.findById(id).orElse(null);
-
-        if (userToEdit == null) {
-            model.addAttribute("errorMessage", "User not found.");
-            return "admin-users";
-        }
-
         try {
-            String passwordToSave = userToEdit.getPasswordHash();
+            onlineBankingUserService.updateOnlineUser(id, username, password);
 
-            if (password != null && !password.trim().isEmpty()) {
-                passwordToSave = password.trim();
-            }
-
-            userService.updateOnlineUser(
-                    id,
-                    username.trim(),
-                    passwordToSave
+            redirectAttributes.addFlashAttribute(
+                    "successMessage",
+                    "Потребителят беше редактиран успешно."
             );
 
-            return "redirect:/admin/users";
-
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Грешка при редакция на потребителя.");
-            model.addAttribute("userToEdit", userToEdit);
-
-            return "admin-users";
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    e.getMessage()
+            );
         }
+
+        return "redirect:/admin/users";
     }
 
-    @GetMapping("/admin/users/delete/{id}")
+    @PostMapping("/admin/users/delete/{id}")
     public String deleteUser(@PathVariable Long id,
                              HttpSession session,
-                             Model model) {
+                             RedirectAttributes redirectAttributes) {
 
         if (isNotAdmin(session)) {
             return "redirect:/login";
         }
 
         try {
-            userService.deleteOnlineUser(id);
-            return "redirect:/admin/users";
+            onlineBankingUserService.deleteOnlineUser(id);
+
+            redirectAttributes.addFlashAttribute(
+                    "successMessage",
+                    "Потребителят беше изтрит успешно."
+            );
 
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Грешка при изтриване.");
-            model.addAttribute("users", userService.findAll());
-
-            return "admin-users";
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    e.getMessage()
+            );
         }
+
+        return "redirect:/admin/users";
     }
 }

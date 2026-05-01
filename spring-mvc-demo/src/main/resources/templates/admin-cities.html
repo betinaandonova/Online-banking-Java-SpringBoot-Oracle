@@ -45,7 +45,8 @@
                 </form>
             </div>
 
-            <table class="styled-table">
+            <div class="table-wrapper">
+            <table class="styled-table paginated-table">
                 <thead>
                 <tr>
                     <th>CITY ID</th>
@@ -80,7 +81,8 @@
                 </tr>
                 </tbody>
             </table>
-
+            </div>
+            <div class="pagination"></div>
         </div>
     </div>
     <div th:replace="~{fragments/confirm-delete-modal :: confirmDeleteModal}"></div>
@@ -89,6 +91,6 @@
 <div class="footer">
     <p>© 2026 BSA Bank. All rights reserved.</p>
 </div>
-
+<script th:src="@{/js/table-pagination.js}"></script>
 </body>
 </html>

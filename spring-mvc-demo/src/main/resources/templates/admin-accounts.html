@@ -66,7 +66,8 @@
                 </div>
             </div>
 
-            <table class="styled-table">
+            <div class="table-wrapper">
+                <table class="styled-table paginated-table" id="accountsTable">
                 <thead>
                 <tr>
                     <th>ACCOUNT ID</th>
@@ -142,6 +143,8 @@
                 </tr>
                 </tbody>
             </table>
+            </div>
+            <div class="pagination" id="accountsPagination"></div>
 
         </div>
     </div>
@@ -170,5 +173,6 @@
         panel.style.display = panel.style.display === "none" ? "block" : "none";
     }
 </script>
+<script th:src="@{/js/table-pagination.js}"></script>
 </body>
 </html>
