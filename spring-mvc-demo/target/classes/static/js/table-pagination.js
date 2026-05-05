@@ -53,8 +53,7 @@ function paginateTable(table, pagination, rowsPerPage) {
 
         for (let i = 1; i <= totalPages; i++) {
             const pageButton = document.createElement("button");
-            pageButton.textContent = i;
-
+            pageButton.textContent = String(i);
             if (i === currentPage) {
                 pageButton.classList.add("active-page");
             }

@@ -16,6 +16,12 @@ import java.time.LocalDate;
 public class ExchangeRate {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "exchange_rate_seq")
+    @SequenceGenerator(
+            name = "exchange_rate_seq",
+            sequenceName = "seq_rate_id",
+            allocationSize = 1
+    )
     @Column(name = "RATE_ID")
     private Long id;
 

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/css/common.css">
+    <link rel="stylesheet" type="text/css" href="/css/nav-side-bar.css">
+    <link rel="stylesheet" type="text/css" href="/css/home-common.css">
+    <link rel="stylesheet" type="text/css" href="/css/home.css">
+    <link rel="stylesheet" type="text/css" href="/css/subscription-history.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Exchange Rates</title>
+</head>
+
+<body>
+<main>
+    <div th:replace="~{fragments/admin-sidebar :: adminSidebar('exchange-rates')}"></div>
+
+    <div class="home-section">
+        <div class="single-section-box subscriptions-container">
+
+            <div class="table-header admin-table-header">
+
+                <div class="table-actions">
+                    <form th:action="@{/admin/exchange-rates/add}" method="post" class="add-inline-form">
+
+
+                        <select id="currencyId" name="currencyId" required>
+                            <option value="">Select currency</option>
+                            <option th:each="currency : ${currencies}"
+                                    th:if="${currency.currencyShort != 'EUR'}"
+                                    th:value="${currency.id}"
+                                    th:text="${currency.currencyShort + ' - ' + currency.currency}">
+                                USD - US Dollar
+                            </option>
+                        </select>
+
+                        <input type="number"
+                               id="rateToEur"
+                               name="rateToEur"
+                               placeholder="Rate to EUR"
+                               step="0.000001"
+                               min="0.000001"
+                               required>
+
+                        <input type="date"
+                               id="rateDate"
+                               name="rateDate">
+
+                        <button type="submit" class="btn add-btn">+ Add Exchange Rate</button>
+                    </form>
+                </div>
+            </div>
+
+            <table class="styled-table">
+                <thead>
+                <tr>
+                    <th>RATE ID</th>
+                    <th>Currency</th>
+                    <th>Rate to EUR</th>
+                    <th>Rate Date</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="rate : ${exchangeRates}">
+
+                    <td th:text="${rate.id}">1</td>
+
+                    <td th:text="${rate.currency.currencyShort + ' - ' + rate.currency.currency}">
+                        USD - US Dollar
+                    </td>
+
+                    <td th:text="${rate.rateToEur}">1.087500</td>
+
+                    <td th:text="${rate.rateDate}">2026-01-01</td>
+
+                    <td class="action-buttons">
+                        <form th:action="@{/admin/exchange-rates/delete/{id}(id=${rate.id})}" method="post" class="delete-form">
+                            <button type="button"
+                                    class="btn delete-btn"
+                                    th:attr="data-delete-name=${rate.currency.currencyShort + ' - ' + rate.rateToEur}"
+                                    onclick="openDeleteModal(this)">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/error-popup :: popupMessages}"></div>
+    <div th:replace="~{fragments/confirm-delete-modal :: confirmDeleteModal}"></div>
+</main>
+
+<div class="footer"><p>© 2026 BSA Bank. All rights reserved.</p></div>
+</body>
+</html>
