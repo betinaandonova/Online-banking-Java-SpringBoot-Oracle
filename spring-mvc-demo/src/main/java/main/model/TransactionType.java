@@ -1,9 +1,6 @@
 package main.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +13,12 @@ import lombok.Setter;
 public class TransactionType {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_type_seq")
+    @SequenceGenerator(
+            name = "transaction_type_seq",
+            sequenceName = "SEQ_TRANSACTION_TYPE_ID",
+            allocationSize = 1
+    )
     @Column(name = "TRANSACTION_TYPE_ID")
     private Long id;
 

@@ -485,3 +485,6 @@ main {
   cursor: not-allowed;
 }
 
+.styled-table.table-extra-wide {
+  min-width: 1500px;
+}
