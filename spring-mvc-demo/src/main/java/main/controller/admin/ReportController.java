@@ -1,4 +1,4 @@
-package main.controller.client;
+package main.controller.admin;
 
 import jakarta.servlet.http.HttpSession;
 import main.model.OnlineBankingUser;
