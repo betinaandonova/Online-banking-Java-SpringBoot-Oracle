@@ -85,12 +85,6 @@ public class AccountService implements MainReadService<Account, Long>{
         String trimmedValue = searchValue.trim();
 
         return switch (searchType) {
-            case CLIENT_ID -> callProcedure(
-                    "ACC_SEARCH_BY_CLIENT_ID",
-                    "p_client_id",
-                    Long.valueOf(trimmedValue)
-            );
-
             case NAME -> callProcedure(
                     "ACC_SEARCH_BY_NAME",
                     "p_name",
