@@ -18,7 +18,6 @@ public interface BankTransactionRepository extends JpaRepository<BankTransaction
 
     List<BankTransaction> findByTransactionDateBetween(LocalDate startDate, LocalDate endDate);
 
-    Long Id(Long id);
-
-    Long id(Long id);
+    // Proverka dali daden tip tranzaktsiya se izpolzva v BANK_TRANSACTIONS
+    boolean existsByTransactionTypeId(Long transactionTypeId);
 }

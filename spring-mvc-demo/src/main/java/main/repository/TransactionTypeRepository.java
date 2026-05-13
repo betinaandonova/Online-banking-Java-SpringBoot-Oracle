@@ -12,4 +12,10 @@ public interface TransactionTypeRepository extends JpaRepository<TransactionType
 
     List<TransactionType> findByTransactionTypeNameContainingIgnoreCase(String transactionTypeName);
 
+    // Proverka dali sushtestvuva tip tranzaktsiya s takova ime
+    boolean existsByTransactionTypeNameIgnoreCase(String transactionTypeName);
+
+    // Proverka dali ima drug zapis sus sushtoto ime, bez tekushtoto ID
+    boolean existsByTransactionTypeNameIgnoreCaseAndIdNot(String transactionTypeName, Long id);
+
 }
