@@ -68,10 +68,37 @@
 
       <img src="\images\cards.png" alt="Profile Picture" class="cards">
 
-      <div class="wallet-balance">
-        <p>IBAN:</p>
-        <p>Currency:</p>
-        <p>Balance:</p>
+      <div class="wallet-accounts-list">
+
+        <div th:if="${#lists.isEmpty(accounts)}" class="wallet-account-card">
+          <p class="wallet-empty-message">You do not have any bank accounts yet.</p>
+        </div>
+
+        <div th:each="account : ${accounts}" class="wallet-account-card">
+
+          <div class="wallet-account-row">
+            <p class="wallet-label">IBAN:</p>
+            <p class="wallet-value" th:text="${account.iban}">IBAN</p>
+          </div>
+
+          <div class="wallet-account-row">
+            <p class="wallet-label">Currency:</p>
+            <p class="wallet-value"
+               th:text="${account.currency.currencyShort + ' - ' + account.currency.currency}">
+              Currency
+            </p>
+          </div>
+
+          <div class="wallet-account-row">
+            <p class="wallet-label">Balance:</p>
+            <p class="wallet-value wallet-balance-value"
+               th:text="${account.availability + ' ' + account.currency.currencyShort}">
+              Balance
+            </p>
+          </div>
+
+        </div>
+
       </div>
 
       <a class="profile-actions-button" href="/wallets">
@@ -90,6 +117,7 @@
         </div>
       </div>
     </div>
+
     <div class="single-section-box home-subscription">
       <div class="default-label-box">
         <p>GOLD CARD</p>

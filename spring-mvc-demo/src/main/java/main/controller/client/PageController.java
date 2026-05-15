@@ -3,6 +3,7 @@ package main.controller.client;
 import jakarta.servlet.http.HttpSession;
 import main.dto.UserProfileResponse;
 import main.model.OnlineBankingUser;
+import main.repository.AccountRepository;
 import main.service.OnlineBankingUserService;
 import main.util.AuthUtil;
 import org.springframework.stereotype.Controller;
@@ -21,9 +22,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class PageController {
 
     private final OnlineBankingUserService onlineBankingUserService;
+    private final AccountRepository accountRepository;
 
-    public PageController(OnlineBankingUserService onlineBankingUserService) {
+    public PageController(OnlineBankingUserService onlineBankingUserService, AccountRepository accountRepository) {
         this.onlineBankingUserService = onlineBankingUserService;
+        this.accountRepository = accountRepository;
     }
 
     @GetMapping("/home")
@@ -42,6 +45,8 @@ public class PageController {
 
         UserProfileResponse profile = onlineBankingUserService.getUserProfile(userId);
         model.addAttribute("profile", profile);
+        Long clientId = user.getClient().getId();
+        model.addAttribute("accounts", accountRepository.findAccountsByClientId(clientId));
 
         return "home";
     }

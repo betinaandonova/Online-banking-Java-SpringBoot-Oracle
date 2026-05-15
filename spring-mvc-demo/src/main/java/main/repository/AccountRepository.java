@@ -29,4 +29,5 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             @Param("phoneNumber") String phoneNumber,
             @Param("currencyId") Long currencyId
     );
+
 }
