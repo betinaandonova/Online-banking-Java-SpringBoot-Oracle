@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" type="text/css" href="/css/common.css">
+    <link rel="stylesheet" type="text/css" href="/css/nav-side-bar.css">
+    <link rel="stylesheet" type="text/css" href="/css/home-common.css">
+    <link rel="stylesheet" type="text/css" href="/css/home.css">
+
+    <title>Send Money</title>
+</head>
+
+<body>
+
+<main>
+    <div th:replace="~{fragments/user-sidebar :: userSidebar('transfers')}"></div>
+
+    <div class="home-section">
+
+        <div class="single-section-box home-profile-information">
+
+                <div class="credit-card-image-container">
+                    <img src="/images/cards.png"
+                         alt="Credit Card"
+                         class="credit-card-image">
+                </div>
+
+                <h2 class="profile-name">Send Money</h2>
+
+                <div class="profile-status-role-container">
+                    <p class="active-profile">TRANSFER</p>
+                </div>
+
+                <div class="details-section"></div>
+
+            <div class="transfer-type-buttons">
+                <button type="button"
+                        id="accountTransferBtn"
+                        class="transfer-type-btn active-transfer-type"
+                        onclick="showAccountTransfer()">
+                    Send By Account
+                </button>
+
+                <button type="button"
+                        id="phoneTransferBtn"
+                        class="transfer-type-btn"
+                        onclick="showPhoneTransfer()">
+                    Send By Phone Number
+                </button>
+            </div>
+
+            <div th:if="${errorMessage}" class="details-section">
+                <div class="details-section-container">
+                    <p class="label">Error:</p>
+                    <p th:text="${errorMessage}">Error message</p>
+                </div>
+            </div>
+
+            <div th:if="${successMessage}" class="details-section">
+                <div class="details-section-container">
+                    <p class="label">Success:</p>
+                    <p th:text="${successMessage}">Success message</p>
+                </div>
+            </div>
+
+            <form th:action="@{/transfers}"
+                  method="post"
+                  onsubmit="return validateTransferForm()">
+
+                <input type="hidden" id="transferMethod" name="transferMethod" value="ACCOUNT">
+
+                <div class="profile-info">
+
+                    <div class="details-section-container">
+                        <p class="label">From Account:</p>
+
+                        <select id="senderAccountId"
+                                name="senderAccountId"
+                                required>
+                            <option value="">Choose your account</option>
+
+                            <option th:each="account : ${accounts}"
+                                    th:value="${account.id}"
+                                    th:text="${account.iban + ' | ' + account.currency.currencyShort + ' | Balance: ' + account.availability}">
+                                Account
+                            </option>
+                        </select>
+                    </div>
+
+                    <div id="receiverAccountBox" class="details-section-container">
+                        <p class="label">Receiver Account:</p>
+
+                        <select id="receiverAccountId"
+                                name="receiverAccountId">
+                            <option value="">Choose receiver account</option>
+
+                            <option th:each="account : ${receiverAccounts}"
+                                    th:value="${account.id}"
+                                    th:text="${account.iban + ' | ' + account.client.name + ' ' + account.client.lastName + ' | ' + account.currency.currencyShort}">
+                                Receiver account
+                            </option>
+                        </select>
+                    </div>
+
+                    <div id="receiverPhoneBox" class="details-section-container hidden-transfer-field">
+                        <p class="label">Receiver Phone:</p>
+
+                        <input type="text"
+                               id="receiverPhoneNumber"
+                               name="receiverPhoneNumber"
+                               placeholder="Enter receiver phone number">
+                    </div>
+
+                    <div class="details-section-container">
+                        <p class="label">Amount:</p>
+
+                        <input type="number"
+                               id="amount"
+                               name="amount"
+                               placeholder="Enter amount"
+                               step="0.01"
+                               min="0.01"
+                               required>
+                    </div>
+
+                    <div class="details-section-container">
+                        <p class="label">Currency:</p>
+
+                        <select id="currencyId"
+                                name="currencyId"
+                                required>
+                            <option value="">Choose currency</option>
+
+                            <option th:each="currency : ${currencies}"
+                                    th:value="${currency.id}"
+                                    th:text="${currency.currencyShort + ' - ' + currency.currency}">
+                                Currency
+                            </option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="transfer-actions">
+                    <button type="submit" class="profile-actions-button transfer-action-button">
+                        <p>Send Money</p>
+                        <svg class="w-6 h-6 text-gray-800 dark:text-white"
+                             aria-hidden="true"
+                             xmlns="http://www.w3.org/2000/svg"
+                             width="24"
+                             height="24"
+                             fill="none"
+                             viewBox="0 0 24 24">
+                            <path stroke="currentColor"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="m16 10 3-3m0 0-3-3m3 3H5v3m3 4-3 3m0 0 3 3m-3-3h14v-3">
+                            </path>
+                        </svg>
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</main>
+
+<div class="footer">
+    <p>© 2026 BSA Bank. All rights reserved.</p>
+</div>
+
+<script>
+    function showAccountTransfer() {
+        document.getElementById("transferMethod").value = "ACCOUNT";
+
+        document.getElementById("receiverAccountBox").classList.remove("hidden-transfer-field");
+        document.getElementById("receiverPhoneBox").classList.add("hidden-transfer-field");
+
+        document.getElementById("receiverAccountId").required = true;
+        document.getElementById("receiverPhoneNumber").required = false;
+
+        document.getElementById("receiverPhoneNumber").value = "";
+
+        document.getElementById("accountTransferBtn").classList.add("active-transfer-type");
+        document.getElementById("phoneTransferBtn").classList.remove("active-transfer-type");
+
+        document.getElementById("transferValidationMessage").textContent =
+            "Send money by choosing receiver account.";
+    }
+
+    function showPhoneTransfer() {
+        document.getElementById("transferMethod").value = "PHONE";
+
+        document.getElementById("receiverAccountBox").classList.add("hidden-transfer-field");
+        document.getElementById("receiverPhoneBox").classList.remove("hidden-transfer-field");
+
+        document.getElementById("receiverAccountId").required = false;
+        document.getElementById("receiverPhoneNumber").required = true;
+
+        document.getElementById("receiverAccountId").value = "";
+
+        document.getElementById("phoneTransferBtn").classList.add("active-transfer-type");
+        document.getElementById("accountTransferBtn").classList.remove("active-transfer-type");
+
+        document.getElementById("transferValidationMessage").textContent =
+            "Send money by receiver phone number.";
+    }
+
+    function validateTransferForm() {
+        const transferMethod = document.getElementById("transferMethod").value;
+        const senderAccountId = document.getElementById("senderAccountId").value;
+        const receiverAccountId = document.getElementById("receiverAccountId").value;
+        const receiverPhoneNumber = document.getElementById("receiverPhoneNumber").value.trim();
+        const amount = Number(document.getElementById("amount").value);
+        const currencyId = document.getElementById("currencyId").value;
+        const message = document.getElementById("transferValidationMessage");
+
+        if (!senderAccountId) {
+            message.textContent = "Sender account is required.";
+            return false;
+        }
+
+        if (transferMethod === "ACCOUNT" && !receiverAccountId) {
+            message.textContent = "Receiver account is required.";
+            return false;
+        }
+
+        if (transferMethod === "ACCOUNT" && senderAccountId === receiverAccountId) {
+            message.textContent = "Sender and receiver accounts cannot be the same.";
+            return false;
+        }
+
+        if (transferMethod === "PHONE" && receiverPhoneNumber.length === 0) {
+            message.textContent = "Receiver phone number is required.";
+            return false;
+        }
+
+        if (!amount || amount <= 0) {
+            message.textContent = "Amount must be greater than 0.";
+            return false;
+        }
+
+        if (!currencyId) {
+            message.textContent = "Currency is required.";
+            return false;
+        }
+
+        message.textContent = "";
+        return true;
+    }
+</script>
+
+</body>
+</html>

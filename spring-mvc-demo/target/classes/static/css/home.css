@@ -90,33 +90,29 @@
 }
 
 .profile-actions-button:hover {
-  background: radial-gradient(
-          circle at 90% top,
-          #e6c55c 0%,   /* блясък */
-          #c9a63a 10%,
-          #b8962e 20%,
-          #a17c1a 30%,
-          #8f711d 40%,
-          #765d17 50%,
-          #5f4a12 60%,
-          #4a390e 70%,
-          #36280a 80%,
-          #241c07 90%,
-          #0b0902 100%
+  background: linear-gradient(
+          135deg,
+          rgba(255, 236, 160, 0.92) 0%,
+          rgba(232, 194, 83, 0.88) 28%,
+          rgba(197, 145, 35, 0.86) 55%,
+          rgba(128, 88, 18, 0.88) 100%
   );
 
-  color: #0b1d3a; /* banking contrast */
-
-  border-radius: 6px;
-  border: none;
-  font-weight: 400;
-
-  transition: all 0.4s ease;
+  color: #fff8d6;
 
   box-shadow:
-          0 6px 15px rgba(0, 0, 0, 0.35),
-          0 0 10px rgba(184, 150, 46, 0.3);
+          0 12px 32px rgba(197, 145, 35, 0.38),
+          inset 0 1px 0 rgba(255, 255, 255, 0.55),
+          inset 0 -1px 0 rgba(90, 61, 10, 0.45);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255, 232, 150, 0.55);
+  transform: translateY(-2px);
 }
+
+
 
 .profile-actions-button:hover {
   transform: translateY(-2px) scale(1.02);
@@ -547,4 +543,143 @@ main {
 #passwordValidationMessage {
   color: #7c3aed;
   font-weight: 600;
+}
+
+.details-section-container input,
+.details-section-container select {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: #333;
+}
+
+.details-section-container input::placeholder {
+  color: #9ca3af;
+}
+
+.details-section-container select {
+  cursor: pointer;
+}
+
+#transferValidationMessage {
+  color: #7c3aed;
+  font-weight: 600;
+}
+
+.transfer-actions {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.transfer-action-button {
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.transfer-action-button p {
+  margin: 0;
+}
+
+.transfer-type-buttons {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin: 18px 0 24px;
+}
+
+.transfer-type-btn {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 22px;
+  border-radius: 14px;
+  background: #0b2145;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  transition: 0.2s ease;
+}
+
+.transfer-type-btn:hover {
+  transform: translateY(-2px);
+}
+
+.active-transfer-type {
+  background: linear-gradient(145deg, #1f8f57, #0f6b3f);
+  box-shadow: 0 12px 28px rgba(31, 143, 87, 0.35);
+}
+
+.hidden-transfer-field {
+  display: none;
+}
+
+.details-section-container input,
+.details-section-container select {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: #d1d5db;
+}
+
+.details-section-container input::placeholder {
+  color: #d1d5db;
+}
+
+.details-section-container select {
+  cursor: pointer;
+}
+
+#transferValidationMessage {
+  color: #7c3aed;
+  font-weight: 600;
+}
+
+.transfer-actions {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.transfer-action-button {
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.transfer-action-button p {
+  margin: 0;
+}
+
+.credit-card-image-container {
+  width: 120px;
+  height: 120px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px auto;
+  overflow: hidden;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+}
+
+.credit-card-image {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  display: block;
 }
