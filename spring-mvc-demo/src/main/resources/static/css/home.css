@@ -372,9 +372,8 @@ main {
 .single-section-box.home-profile-information {
   width: 100%;
   max-width: none;
-  flex: 1;
   margin: 30px;
-  min-height: 600px;
+  min-height: 400px;
 }
 
 .profile-info .details-section-container .label {
@@ -741,4 +740,38 @@ main {
   color: #f8d66d;
   font-size: 14px;
   font-weight: 800;
+}
+
+.gold-compact-info {
+  width: 92%;
+  margin: 22px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gold-info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+}
+
+.gold-info-label {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #e5e7eb;
+}
+
+.gold-info-value {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  color: #f8d66d;
 }
