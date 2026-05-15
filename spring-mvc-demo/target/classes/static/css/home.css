@@ -488,3 +488,63 @@ main {
 .styled-table.table-extra-wide {
   min-width: 1500px;
 }
+
+.details-section-container input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: #333;
+}
+
+.details-section-container input::placeholder {
+  color: #9ca3af;
+}
+
+.details-section-container input:focus {
+  color: #111827;
+}
+
+#passwordValidationMessage {
+  color: #7c3aed;
+  font-weight: 600;
+}
+
+.password-actions {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.password-action-button {
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.password-action-button p {
+  margin: 0;
+}
+
+.details-section-container input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: #333;
+}
+
+.details-section-container input::placeholder {
+  color: #9ca3af;
+}
+
+#passwordValidationMessage {
+  color: #7c3aed;
+  font-weight: 600;
+}

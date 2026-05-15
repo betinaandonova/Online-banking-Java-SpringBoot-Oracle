@@ -195,4 +195,50 @@ public class OnlineBankingUserService implements MainReadService<OnlineBankingUs
 
         return query.getResultList();
     }
+
+    @Transactional
+    public void changePassword(
+            Long userId,
+            String oldPassword,
+            String newPassword,
+            String confirmPassword
+    ) {
+        OnlineBankingUser user = onlineBankingUserRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Потребителят не е намерен."));
+
+        String oldPass = oldPassword == null ? "" : oldPassword.trim();
+        String newPass = newPassword == null ? "" : newPassword.trim();
+        String confirmPass = confirmPassword == null ? "" : confirmPassword.trim();
+
+        if (oldPass.isEmpty()) {
+            throw new RuntimeException("Старата парола е задължителна.");
+        }
+
+        if (newPass.isEmpty()) {
+            throw new RuntimeException("Новата парола е задължителна.");
+        }
+
+        if (confirmPass.isEmpty()) {
+            throw new RuntimeException("Повторената парола е задължителна.");
+        }
+
+        if (!oldPass.equals(user.getPasswordHash())) {
+            throw new RuntimeException("Старата парола е грешна.");
+        }
+
+        if (newPass.length() < 6) {
+            throw new RuntimeException("Новата парола трябва да бъде поне 6 символа.");
+        }
+
+        if (!newPass.equals(confirmPass)) {
+            throw new RuntimeException("Новата парола и повторената парола не съвпадат.");
+        }
+
+        if (oldPass.equals(newPass)) {
+            throw new RuntimeException("Новата парола не може да бъде същата като старата.");
+        }
+
+        user.setPasswordHash(newPass);
+        onlineBankingUserRepository.save(user);
+    }
 }
