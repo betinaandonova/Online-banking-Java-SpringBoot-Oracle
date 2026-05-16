@@ -23,8 +23,10 @@ public class TransferService {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public TransferService(AccountRepository accountRepository,
-                           TransactionTypeRepository transactionTypeRepository) {
+    public TransferService(
+            AccountRepository accountRepository,
+            TransactionTypeRepository transactionTypeRepository
+    ) {
         this.accountRepository = accountRepository;
         this.transactionTypeRepository = transactionTypeRepository;
     }
@@ -151,6 +153,21 @@ public class TransferService {
         query.setParameter("p_currency_id", currencyId);
 
         query.execute();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Account> findAccountsByClientId(Long clientId) {
+        StoredProcedureQuery query = entityManager
+                .createStoredProcedureQuery("ACC_FIND_BY_CLIENT_ID", Account.class);
+
+        query.registerStoredProcedureParameter("p_client_id", Long.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter("p_result", void.class, ParameterMode.REF_CURSOR);
+
+        query.setParameter("p_client_id", clientId);
+
+        query.execute();
+
+        return query.getResultList();
     }
 
     @Transactional(readOnly = true)

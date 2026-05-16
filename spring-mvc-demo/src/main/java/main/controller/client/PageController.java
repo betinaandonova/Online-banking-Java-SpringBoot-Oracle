@@ -3,34 +3,30 @@ package main.controller.client;
 import jakarta.servlet.http.HttpSession;
 import main.dto.UserProfileResponse;
 import main.model.OnlineBankingUser;
-import main.repository.AccountRepository;
 import main.service.OnlineBankingUserService;
+import main.service.TransferService;
 import main.util.AuthUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-/**
- * Handles navigation to main application pages.
- * Responsibilities:
- * - Client home page
- * - Admin home page
- * Performs access control based on user role.
- */
-
 @Controller
 public class PageController {
 
     private final OnlineBankingUserService onlineBankingUserService;
-    private final AccountRepository accountRepository;
+    private final TransferService transferService;
 
-    public PageController(OnlineBankingUserService onlineBankingUserService, AccountRepository accountRepository) {
+    public PageController(
+            OnlineBankingUserService onlineBankingUserService,
+            TransferService transferService
+    ) {
         this.onlineBankingUserService = onlineBankingUserService;
-        this.accountRepository = accountRepository;
+        this.transferService = transferService;
     }
 
     @GetMapping("/home")
     public String clientHome(HttpSession session, Model model) {
+
         Long userId = (Long) session.getAttribute("userId");
 
         if (userId == null) {
@@ -44,15 +40,19 @@ public class PageController {
         }
 
         UserProfileResponse profile = onlineBankingUserService.getUserProfile(userId);
+
         model.addAttribute("profile", profile);
+
         Long clientId = user.getClient().getId();
-        model.addAttribute("accounts", accountRepository.findAccountsByClientId(clientId));
+
+        model.addAttribute("accounts", transferService.findAccountsByClientId(clientId));
 
         return "home";
     }
 
     @GetMapping("/admin/home")
     public String adminHome(HttpSession session, Model model) {
+
         Long userId = (Long) session.getAttribute("userId");
 
         if (userId == null) {
@@ -66,6 +66,7 @@ public class PageController {
         }
 
         UserProfileResponse profile = onlineBankingUserService.getUserProfile(userId);
+
         model.addAttribute("profile", profile);
 
         return "admin-home";

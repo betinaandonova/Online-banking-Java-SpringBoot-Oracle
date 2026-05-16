@@ -2,7 +2,6 @@ package main.controller.client;
 
 import jakarta.servlet.http.HttpSession;
 import main.model.OnlineBankingUser;
-import main.repository.AccountRepository;
 import main.repository.CurrencyTypeRepository;
 import main.service.OnlineBankingUserService;
 import main.service.TransferService;
@@ -20,18 +19,15 @@ import java.math.BigDecimal;
 public class ClientTransferController {
 
     private final OnlineBankingUserService onlineBankingUserService;
-    private final AccountRepository accountRepository;
     private final CurrencyTypeRepository currencyTypeRepository;
     private final TransferService transferService;
 
     public ClientTransferController(
             OnlineBankingUserService onlineBankingUserService,
-            AccountRepository accountRepository,
             CurrencyTypeRepository currencyTypeRepository,
             TransferService transferService
     ) {
         this.onlineBankingUserService = onlineBankingUserService;
-        this.accountRepository = accountRepository;
         this.currencyTypeRepository = currencyTypeRepository;
         this.transferService = transferService;
     }
@@ -53,8 +49,7 @@ public class ClientTransferController {
 
         Long clientId = user.getClient().getId();
 
-        model.addAttribute("accounts", accountRepository.findAccountsByClientId(clientId));
-        model.addAttribute("receiverAccounts", accountRepository.findAccountsByClientIdNot(clientId));
+        model.addAttribute("accounts", transferService.findAccountsByClientId(clientId));
         model.addAttribute("currencies", currencyTypeRepository.findAll());
 
         return "send-money";

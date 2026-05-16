@@ -62,7 +62,17 @@ public class AccountService implements MainReadService<Account, Long>{
 
 
     public List<Account> findByClientId(Long clientId) {
-        return accountRepository.findByClient_Id(clientId);
+        StoredProcedureQuery query = entityManager
+                .createStoredProcedureQuery("ACC_FIND_BY_CLIENT_ID", Account.class);
+
+        query.registerStoredProcedureParameter("p_client_id", Long.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter("p_result", void.class, ParameterMode.REF_CURSOR);
+
+        query.setParameter("p_client_id", clientId);
+
+        query.execute();
+
+        return query.getResultList();
     }
 
 
