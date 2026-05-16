@@ -28,26 +28,26 @@
 
         <div class="single-section-box home-profile-information">
 
-                <div class="credit-card-image-container">
-                    <img src="/images/cards.png"
-                         alt="Credit Card"
-                         class="credit-card-image">
-                </div>
+            <div class="credit-card-image-container">
+                <img src="/images/cards.png"
+                     alt="Credit Card"
+                     class="credit-card-image">
+            </div>
 
-                <h2 class="profile-name">Send Money</h2>
+            <h2 class="profile-name">Send Money</h2>
 
-                <div class="profile-status-role-container">
-                    <p class="active-profile">TRANSFER</p>
-                </div>
+            <div class="profile-status-role-container">
+                <p class="active-profile">TRANSFER</p>
+            </div>
 
-                <div class="details-section"></div>
+            <div class="details-section"></div>
 
             <div class="transfer-type-buttons">
                 <button type="button"
-                        id="accountTransferBtn"
+                        id="ibanTransferBtn"
                         class="transfer-type-btn active-transfer-type"
-                        onclick="showAccountTransfer()">
-                    Send By Account
+                        onclick="showIbanTransfer()">
+                    Send By IBAN
                 </button>
 
                 <button type="button"
@@ -76,7 +76,7 @@
                   method="post"
                   onsubmit="return validateTransferForm()">
 
-                <input type="hidden" id="transferMethod" name="transferMethod" value="ACCOUNT">
+                <input type="hidden" id="transferMethod" name="transferMethod" value="IBAN">
 
                 <div class="profile-info">
 
@@ -96,19 +96,14 @@
                         </select>
                     </div>
 
-                    <div id="receiverAccountBox" class="details-section-container">
-                        <p class="label">Receiver Account:</p>
+                    <div id="receiverIbanBox" class="details-section-container">
+                        <p class="label">Receiver IBAN:</p>
 
-                        <select id="receiverAccountId"
-                                name="receiverAccountId">
-                            <option value="">Choose receiver account</option>
-
-                            <option th:each="account : ${receiverAccounts}"
-                                    th:value="${account.id}"
-                                    th:text="${account.iban + ' | ' + account.client.name + ' ' + account.client.lastName + ' | ' + account.currency.currencyShort}">
-                                Receiver account
-                            </option>
-                        </select>
+                        <input type="text"
+                               id="receiverIban"
+                               name="receiverIban"
+                               placeholder="Enter receiver IBAN"
+                               required>
                     </div>
 
                     <div id="receiverPhoneBox" class="details-section-container hidden-transfer-field">
@@ -168,7 +163,6 @@
                             </path>
                         </svg>
                     </button>
-
                 </div>
 
             </form>
@@ -183,82 +177,69 @@
 </div>
 
 <script>
-    function showAccountTransfer() {
-        document.getElementById("transferMethod").value = "ACCOUNT";
+    function showIbanTransfer() {
+        document.getElementById("transferMethod").value = "IBAN";
 
-        document.getElementById("receiverAccountBox").classList.remove("hidden-transfer-field");
+        document.getElementById("receiverIbanBox").classList.remove("hidden-transfer-field");
         document.getElementById("receiverPhoneBox").classList.add("hidden-transfer-field");
 
-        document.getElementById("receiverAccountId").required = true;
+        document.getElementById("receiverIban").required = true;
         document.getElementById("receiverPhoneNumber").required = false;
 
         document.getElementById("receiverPhoneNumber").value = "";
 
-        document.getElementById("accountTransferBtn").classList.add("active-transfer-type");
+        document.getElementById("ibanTransferBtn").classList.add("active-transfer-type");
         document.getElementById("phoneTransferBtn").classList.remove("active-transfer-type");
-
-        document.getElementById("transferValidationMessage").textContent =
-            "Send money by choosing receiver account.";
     }
 
     function showPhoneTransfer() {
         document.getElementById("transferMethod").value = "PHONE";
 
-        document.getElementById("receiverAccountBox").classList.add("hidden-transfer-field");
+        document.getElementById("receiverIbanBox").classList.add("hidden-transfer-field");
         document.getElementById("receiverPhoneBox").classList.remove("hidden-transfer-field");
 
-        document.getElementById("receiverAccountId").required = false;
+        document.getElementById("receiverIban").required = false;
         document.getElementById("receiverPhoneNumber").required = true;
 
-        document.getElementById("receiverAccountId").value = "";
+        document.getElementById("receiverIban").value = "";
 
         document.getElementById("phoneTransferBtn").classList.add("active-transfer-type");
-        document.getElementById("accountTransferBtn").classList.remove("active-transfer-type");
-
-        document.getElementById("transferValidationMessage").textContent =
-            "Send money by receiver phone number.";
+        document.getElementById("ibanTransferBtn").classList.remove("active-transfer-type");
     }
 
     function validateTransferForm() {
         const transferMethod = document.getElementById("transferMethod").value;
         const senderAccountId = document.getElementById("senderAccountId").value;
-        const receiverAccountId = document.getElementById("receiverAccountId").value;
+        const receiverIban = document.getElementById("receiverIban").value.trim();
         const receiverPhoneNumber = document.getElementById("receiverPhoneNumber").value.trim();
         const amount = Number(document.getElementById("amount").value);
         const currencyId = document.getElementById("currencyId").value;
-        const message = document.getElementById("transferValidationMessage");
 
         if (!senderAccountId) {
-            message.textContent = "Sender account is required.";
+            alert("Sender account is required.");
             return false;
         }
 
-        if (transferMethod === "ACCOUNT" && !receiverAccountId) {
-            message.textContent = "Receiver account is required.";
-            return false;
-        }
-
-        if (transferMethod === "ACCOUNT" && senderAccountId === receiverAccountId) {
-            message.textContent = "Sender and receiver accounts cannot be the same.";
+        if (transferMethod === "IBAN" && receiverIban.length === 0) {
+            alert("Receiver IBAN is required.");
             return false;
         }
 
         if (transferMethod === "PHONE" && receiverPhoneNumber.length === 0) {
-            message.textContent = "Receiver phone number is required.";
+            alert("Receiver phone number is required.");
             return false;
         }
 
         if (!amount || amount <= 0) {
-            message.textContent = "Amount must be greater than 0.";
+            alert("Amount must be greater than 0.");
             return false;
         }
 
         if (!currencyId) {
-            message.textContent = "Currency is required.";
+            alert("Currency is required.");
             return false;
         }
 
-        message.textContent = "";
         return true;
     }
 </script>

@@ -192,4 +192,66 @@ public class AccountService implements MainReadService<Account, Long>{
 
         query.execute();
     }
+
+    @Transactional(readOnly = true)
+    public List<Account> findAccountsByClientId(Long clientId) {
+        StoredProcedureQuery query = entityManager
+                .createStoredProcedureQuery("ACC_FIND_BY_CLIENT_ID", Account.class);
+
+        query.registerStoredProcedureParameter("p_client_id", Long.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter("p_result", void.class, ParameterMode.REF_CURSOR);
+
+        query.setParameter("p_client_id", clientId);
+
+        query.execute();
+
+        return query.getResultList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Account> findAccountsByClientIdNot(Long clientId) {
+        StoredProcedureQuery query = entityManager
+                .createStoredProcedureQuery("ACC_FIND_BY_CLIENT_ID_NOT", Account.class);
+
+        query.registerStoredProcedureParameter("p_client_id", Long.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter("p_result", void.class, ParameterMode.REF_CURSOR);
+
+        query.setParameter("p_client_id", clientId);
+
+        query.execute();
+
+        return query.getResultList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Account> findReceiverAccountsByPhoneAndCurrency(String phoneNumber, Long currencyId) {
+        StoredProcedureQuery query = entityManager
+                .createStoredProcedureQuery("ACC_RECEIVER_BY_PHONE_AND_CURR", Account.class);
+
+        query.registerStoredProcedureParameter("p_phone_number", String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter("p_currency_id", Long.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter("p_result", void.class, ParameterMode.REF_CURSOR);
+
+        query.setParameter("p_phone_number", phoneNumber);
+        query.setParameter("p_currency_id", currencyId);
+
+        query.execute();
+
+        return query.getResultList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Account> findReceiverAccountsByIban(String iban) {
+        StoredProcedureQuery query = entityManager
+                .createStoredProcedureQuery("ACC_RECEIVER_BY_IBAN", Account.class);
+
+        query.registerStoredProcedureParameter("p_iban", String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter("p_result", void.class, ParameterMode.REF_CURSOR);
+
+        query.setParameter("p_iban", iban);
+
+        query.execute();
+
+        return query.getResultList();
+    }
 }

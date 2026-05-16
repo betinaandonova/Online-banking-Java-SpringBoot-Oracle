@@ -62,13 +62,13 @@ public class ClientTransferController {
 
     @PostMapping("/transfers")
     public String makeTransfer(
-            HttpSession session,
             @RequestParam String transferMethod,
             @RequestParam Long senderAccountId,
-            @RequestParam(required = false) Long receiverAccountId,
             @RequestParam(required = false) String receiverPhoneNumber,
+            @RequestParam(required = false) String receiverIban,
             @RequestParam BigDecimal amount,
             @RequestParam Long currencyId,
+            HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
         Long userId = (Long) session.getAttribute("userId");
@@ -90,8 +90,8 @@ public class ClientTransferController {
                     clientId,
                     transferMethod,
                     senderAccountId,
-                    receiverAccountId,
                     receiverPhoneNumber,
+                    receiverIban,
                     amount,
                     currencyId
             );
