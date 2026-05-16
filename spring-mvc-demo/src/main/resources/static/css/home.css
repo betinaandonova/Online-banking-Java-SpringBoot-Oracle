@@ -775,3 +775,13 @@ main {
   font-weight: 800;
   color: #f8d66d;
 }
+
+.amount-positive {
+  color: #16a34a;
+  font-weight: 700;
+}
+
+.amount-negative {
+  color: #dc2626;
+  font-weight: 700;
+}

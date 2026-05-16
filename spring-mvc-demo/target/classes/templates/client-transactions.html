@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" type="text/css" href="/css/common.css">
+    <link rel="stylesheet" type="text/css" href="/css/nav-side-bar.css">
+    <link rel="stylesheet" type="text/css" href="/css/home-common.css">
+    <link rel="stylesheet" type="text/css" href="/css/home.css">
+
+    <title>Last Transactions</title>
+</head>
+
+<body>
+
+<main>
+    <div th:replace="~{fragments/user-sidebar :: userSidebar('transactions')}"></div>
+    <div class="home-section">
+        <div class="single-section-box home-profile-information">
+
+            <h2 class="profile-name">Last 30 Transactions</h2>
+
+            <div class="profile-status-role-container">
+                <p class="active-profile">ACCOUNT MOVEMENTS</p>
+            </div>
+
+            <div th:if="${errorMessage}" class="details-section">
+                <div class="details-section-container">
+                    <p class="label">Error:</p>
+                    <p th:text="${errorMessage}">Error message</p>
+                </div>
+            </div>
+
+            <form th:action="@{/client/transactions}" method="get" class="profile-info">
+
+                <div class="details-section-container">
+                    <p class="label">Choose Account:</p>
+
+                    <select name="accountId" required>
+                        <option value="">Choose account</option>
+
+                        <option th:each="account : ${accounts}"
+                                th:value="${account.id}"
+                                th:selected="${selectedAccountId != null and selectedAccountId == account.id}"
+                                th:text="${account.iban + ' | ' + account.currency.currencyShort + ' | Balance: ' + account.availability}">
+                            Account
+                        </option>
+                    </select>
+                </div>
+
+                <div class="transfer-actions">
+                    <button type="submit" class="profile-actions-button transfer-action-button">
+                        <p>Show Transactions</p>
+                    </button>
+                </div>
+
+            </form>
+
+            <div class="details-section" th:if="${movements != null}">
+                <table class="styled-table">
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Receiver</th>
+                        <th>Amount</th>
+                        <th>Currency</th>
+                        <th>Direction</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="movement : ${movements}">
+                        <td th:text="${movement.movementDate}">2026-05-16</td>
+
+                        <td th:text="${movement.counterparty}">Ivan Petrov</td>
+
+                        <td>
+    <span th:if="${movement.direction == 'INCOMING'}"
+          class="amount-positive"
+          th:text="${'+' + movement.amount}">
+        +100.00
+    </span>
+
+                            <span th:if="${movement.direction == 'OUTGOING'}"
+                                  class="amount-negative"
+                                  th:text="${'-' + movement.amount}">
+        -100.00
+    </span>
+                        </td>
+
+                        <td th:text="${movement.currencyShort}">EUR</td>
+
+                        <td>
+                            <span th:if="${movement.direction == 'INCOMING'}" class="status active">
+                                RECEIVED
+                            </span>
+
+                            <span th:if="${movement.direction == 'OUTGOING'}" class="status inactive">
+                                SENT
+                            </span>
+                        </td>
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(movements)}">
+                        <td colspan="5">No transactions found for this account.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<div class="footer">
+    <p>© 2026 BSA Bank. All rights reserved.</p>
+</div>
+
+</body>
+</html>

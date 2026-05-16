@@ -14,6 +14,9 @@ import java.util.Optional;
 import main.dto.AdminAccountResponse;
 import main.enums.AccountSearchType;
 import java.util.ArrayList;
+import main.dto.AccountMovementResponse;
+import java.sql.Date;
+import java.sql.Timestamp;
 
 @Service
 public class AccountService implements MainReadService<Account, Long>{
@@ -263,5 +266,38 @@ public class AccountService implements MainReadService<Account, Long>{
         query.execute();
 
         return query.getResultList();
+    }
+
+
+    public List<AccountMovementResponse> findLast30MovementsByAccountId(Long accountId) {
+        StoredProcedureQuery query = entityManager
+                .createStoredProcedureQuery("ACC_LAST_30_MOVEMENTS");
+
+        query.registerStoredProcedureParameter("p_account_id", Long.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter("p_result", void.class, ParameterMode.REF_CURSOR);
+
+        query.setParameter("p_account_id", accountId);
+
+        query.execute();
+
+        List<Object[]> resultList = query.getResultList();
+        List<AccountMovementResponse> movements = new ArrayList<>();
+
+        for (Object[] row : resultList) {
+            Timestamp timestamp = (Timestamp) row[0];
+
+            AccountMovementResponse movement = AccountMovementResponse.builder()
+                    .movementDate(timestamp == null ? null : timestamp.toLocalDateTime())
+                    .counterparty((String) row[1])
+                    .amount((BigDecimal) row[2])
+                    .currencyShort((String) row[3])
+                    .direction((String) row[4])
+                    .signedAmount((BigDecimal) row[5])
+                    .build();
+
+            movements.add(movement);
+        }
+
+        return movements;
     }
 }
