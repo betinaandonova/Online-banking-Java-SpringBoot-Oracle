@@ -38,8 +38,7 @@ public class TransferService {
             Long senderAccountId,
             String receiverPhoneNumber,
             String receiverIban,
-            BigDecimal amount,
-            Long currencyId
+            BigDecimal amount
     ) {
         if (loggedClientId == null) {
             throw new RuntimeException("Невалиден потребител.");
@@ -57,21 +56,12 @@ public class TransferService {
             throw new RuntimeException("Сумата трябва да бъде по-голяма от 0.");
         }
 
-        if (currencyId == null) {
-            throw new RuntimeException("Изберете валута.");
-        }
-
         Account senderAccount = accountRepository.findById(senderAccountId)
                 .orElseThrow(() -> new RuntimeException("Сметката на подателя не е намерена."));
 
         if (senderAccount.getClient() == null ||
                 !senderAccount.getClient().getId().equals(loggedClientId)) {
             throw new RuntimeException("Нямате право да извършвате превод от тази сметка.");
-        }
-
-        if (senderAccount.getCurrency() == null ||
-                !senderAccount.getCurrency().getId().equals(currencyId)) {
-            throw new RuntimeException("Избраната валута не съвпада с валутата на сметката на подателя.");
         }
 
         Account receiverAccount;
@@ -83,11 +73,10 @@ public class TransferService {
                 throw new RuntimeException("Въведете телефонен номер на получателя.");
             }
 
-            List<Account> foundAccounts =
-                    findReceiverAccountsByPhoneAndCurrency(phone, currencyId);
+            List<Account> foundAccounts = findReceiverAccountsByPhone(phone);
 
             if (foundAccounts.isEmpty()) {
-                throw new RuntimeException("Не е намерена сметка с този телефон и валута.");
+                throw new RuntimeException("Не е намерена сметка с този телефон.");
             }
 
             receiverAccount = foundAccounts.get(0);
@@ -99,8 +88,7 @@ public class TransferService {
                 throw new RuntimeException("Въведете IBAN на получателя.");
             }
 
-            List<Account> foundAccounts =
-                    findReceiverAccountsByIban(iban);
+            List<Account> foundAccounts = findReceiverAccountsByIban(iban);
 
             if (foundAccounts.isEmpty()) {
                 throw new RuntimeException("Не е намерена сметка с този IBAN.");
@@ -114,11 +102,6 @@ public class TransferService {
 
         if (senderAccountId.equals(receiverAccount.getId())) {
             throw new RuntimeException("Подателят и получателят не могат да бъдат една и съща сметка.");
-        }
-
-        if (receiverAccount.getCurrency() == null ||
-                !receiverAccount.getCurrency().getId().equals(currencyId)) {
-            throw new RuntimeException("Валутата на получателя трябва да съвпада с избраната валута.");
         }
 
         if (senderAccount.getAvailability().compareTo(amount) < 0) {
@@ -140,8 +123,6 @@ public class TransferService {
         query.registerStoredProcedureParameter("p_employee_id", Long.class, ParameterMode.IN);
         query.registerStoredProcedureParameter("p_transaction_type_id", Long.class, ParameterMode.IN);
         query.registerStoredProcedureParameter("p_receiver_phone_number", String.class, ParameterMode.IN);
-        query.registerStoredProcedureParameter("p_receiver_iban", String.class, ParameterMode.IN);
-        query.registerStoredProcedureParameter("p_currency_id", Long.class, ParameterMode.IN);
 
         query.setParameter("p_sender_account_id", senderAccountId);
         query.setParameter("p_receiver_account_id", receiverAccount.getId());
@@ -149,8 +130,6 @@ public class TransferService {
         query.setParameter("p_employee_id", null);
         query.setParameter("p_transaction_type_id", transferType.getId());
         query.setParameter("p_receiver_phone_number", cleanPhoneNumber(receiverPhoneNumber));
-        query.setParameter("p_receiver_iban", receiverAccount.getIban());
-        query.setParameter("p_currency_id", currencyId);
 
         query.execute();
     }
@@ -171,16 +150,14 @@ public class TransferService {
     }
 
     @Transactional(readOnly = true)
-    public List<Account> findReceiverAccountsByPhoneAndCurrency(String phoneNumber, Long currencyId) {
+    public List<Account> findReceiverAccountsByPhone(String phoneNumber) {
         StoredProcedureQuery query = entityManager
-                .createStoredProcedureQuery("ACC_RECEIVER_BY_PHONE_AND_CURR", Account.class);
+                .createStoredProcedureQuery("ACC_RECEIVER_BY_PHONE", Account.class);
 
         query.registerStoredProcedureParameter("p_phone_number", String.class, ParameterMode.IN);
-        query.registerStoredProcedureParameter("p_currency_id", Long.class, ParameterMode.IN);
         query.registerStoredProcedureParameter("p_result", void.class, ParameterMode.REF_CURSOR);
 
         query.setParameter("p_phone_number", phoneNumber);
-        query.setParameter("p_currency_id", currencyId);
 
         query.execute();
 

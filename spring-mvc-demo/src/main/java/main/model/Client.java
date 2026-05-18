@@ -29,10 +29,10 @@ public class Client {
     @Column(name = "LAST_NAME", nullable = false, length = 20)
     private String lastName;
 
-    @Column(name = "EGN", nullable = false, length = 10)
+    @Column(name = "EGN", nullable = false, unique = true, length = 10)
     private String egn;
 
-    @Column(name = "PHONE_NUMBER", nullable = false, length = 15)
+    @Column(name = "PHONE_NUMBER", nullable = false, unique = true, length = 15)
     private String phoneNumber;
 
     @Column(name = "ADDRESS", nullable = false, length = 100)

@@ -127,22 +127,6 @@
                                required>
                     </div>
 
-                    <div class="details-section-container">
-                        <p class="label">Currency:</p>
-
-                        <select id="currencyId"
-                                name="currencyId"
-                                required>
-                            <option value="">Choose currency</option>
-
-                            <option th:each="currency : ${currencies}"
-                                    th:value="${currency.id}"
-                                    th:text="${currency.currencyShort + ' - ' + currency.currency}">
-                                Currency
-                            </option>
-                        </select>
-                    </div>
-
                 </div>
 
                 <div class="transfer-actions">
@@ -213,7 +197,6 @@
         const receiverIban = document.getElementById("receiverIban").value.trim();
         const receiverPhoneNumber = document.getElementById("receiverPhoneNumber").value.trim();
         const amount = Number(document.getElementById("amount").value);
-        const currencyId = document.getElementById("currencyId").value;
 
         if (!senderAccountId) {
             alert("Sender account is required.");
@@ -232,11 +215,6 @@
 
         if (!amount || amount <= 0) {
             alert("Amount must be greater than 0.");
-            return false;
-        }
-
-        if (!currencyId) {
-            alert("Currency is required.");
             return false;
         }
 

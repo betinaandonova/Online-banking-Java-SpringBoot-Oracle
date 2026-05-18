@@ -2,7 +2,6 @@ package main.controller.client;
 
 import jakarta.servlet.http.HttpSession;
 import main.model.OnlineBankingUser;
-import main.repository.CurrencyTypeRepository;
 import main.service.OnlineBankingUserService;
 import main.service.TransferService;
 import main.util.AuthUtil;
@@ -19,16 +18,13 @@ import java.math.BigDecimal;
 public class ClientTransferController {
 
     private final OnlineBankingUserService onlineBankingUserService;
-    private final CurrencyTypeRepository currencyTypeRepository;
     private final TransferService transferService;
 
     public ClientTransferController(
             OnlineBankingUserService onlineBankingUserService,
-            CurrencyTypeRepository currencyTypeRepository,
             TransferService transferService
     ) {
         this.onlineBankingUserService = onlineBankingUserService;
-        this.currencyTypeRepository = currencyTypeRepository;
         this.transferService = transferService;
     }
 
@@ -50,7 +46,6 @@ public class ClientTransferController {
         Long clientId = user.getClient().getId();
 
         model.addAttribute("accounts", transferService.findAccountsByClientId(clientId));
-        model.addAttribute("currencies", currencyTypeRepository.findAll());
 
         return "send-money";
     }
@@ -62,7 +57,6 @@ public class ClientTransferController {
             @RequestParam(required = false) String receiverPhoneNumber,
             @RequestParam(required = false) String receiverIban,
             @RequestParam BigDecimal amount,
-            @RequestParam Long currencyId,
             HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
@@ -87,8 +81,7 @@ public class ClientTransferController {
                     senderAccountId,
                     receiverPhoneNumber,
                     receiverIban,
-                    amount,
-                    currencyId
+                    amount
             );
 
             redirectAttributes.addFlashAttribute(
