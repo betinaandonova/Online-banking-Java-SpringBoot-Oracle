@@ -46,7 +46,6 @@
                         <th>Receiver IBAN</th>
                         <th>Currency</th>
                         <th>Date</th>
-                        <th>Actions</th>
                     </tr>
                     </thead>
 
@@ -85,20 +84,6 @@
                             2026-01-01
                         </td>
 
-                        <td class="action-buttons">
-                            <form th:action="@{/admin/bank-transactions/delete/{id}(id=${transaction.id})}"
-                                  method="post"
-                                  class="delete-form">
-
-                                <button type="button"
-                                        class="btn delete-btn"
-                                        th:attr="data-delete-name=${'Transaction #' + transaction.id}"
-                                        onclick="openDeleteModal(this)">
-                                    Delete
-                                </button>
-                            </form>
-                        </td>
-
                     </tr>
                     </tbody>
                 </table>
@@ -108,7 +93,6 @@
     </div>
 
     <div th:replace="~{fragments/error-popup :: popupMessages}"></div>
-    <div th:replace="~{fragments/confirm-delete-modal :: confirmDeleteModal}"></div>
 </main>
 
 <div class="footer">
