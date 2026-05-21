@@ -40,7 +40,6 @@
             <table class="styled-table">
                 <thead>
                 <tr>
-                    <th>COUNTRY ID</th>
                     <th>Country Name</th>
                     <th>Actions</th>
                 </tr>
@@ -48,9 +47,6 @@
 
                 <tbody>
                 <tr th:each="c : ${countries}">
-
-                    <!-- ID -->
-                    <td th:text="${c.id}">1</td>
 
                     <!-- NAME (само текст, не editable) -->
                     <td th:text="${c.countryName}">Bulgaria</td>

@@ -70,8 +70,6 @@
                 <table class="styled-table paginated-table" id="accountsTable">
                 <thead>
                 <tr>
-                    <th>ACCOUNT ID</th>
-                    <th>CLIENT ID</th>
                     <th>Client Name</th>
                     <th>EGN</th>
                     <th>Phone Number</th>
@@ -84,10 +82,6 @@
 
                 <tbody>
                 <tr th:each="a : ${accounts}">
-
-                    <td th:text="${a.accountId}">1</td>
-
-                    <td th:text="${a.clientId}">1</td>
 
                     <td th:text="${a.clientFullName}">Client Name</td>
 

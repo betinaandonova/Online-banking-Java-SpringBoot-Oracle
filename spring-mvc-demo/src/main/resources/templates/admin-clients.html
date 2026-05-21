@@ -31,7 +31,6 @@
             <table class="styled-table">
                 <thead>
                 <tr>
-                    <th>CLIENT ID</th>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>EGN</th>
@@ -46,8 +45,6 @@
                 <tbody>
                 <tr th:each="c : ${clients}">
 
-                    <!-- ID (само текст) -->
-                    <td th:text="${c.id}">1</td>
 
                     <!-- NAME -->
                     <td>

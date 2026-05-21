@@ -58,7 +58,6 @@
             <table class="styled-table">
                 <thead>
                 <tr>
-                    <th>RATE ID</th>
                     <th>Currency</th>
                     <th>Rate to EUR</th>
                     <th>Rate Date</th>
@@ -68,8 +67,6 @@
 
                 <tbody>
                 <tr th:each="rate : ${exchangeRates}">
-
-                    <td th:text="${rate.id}">1</td>
 
                     <td th:text="${rate.currency.currencyShort + ' - ' + rate.currency.currency}">
                         USD - US Dollar

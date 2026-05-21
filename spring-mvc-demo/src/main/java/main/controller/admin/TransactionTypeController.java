@@ -26,11 +26,14 @@ public class TransactionTypeController {
     public String addTransactionType(
             @RequestParam String transactionTypeName,
             RedirectAttributes redirectAttributes
-    ) {
-        try {
+    )
+    {
+        try
+        {
             transactionTypeService.insertTransactionType(transactionTypeName);
             redirectAttributes.addFlashAttribute("successMessage", "Типът транзакция е добавен успешно.");
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", getUserFriendlyErrorMessage(e, "add"));
         }
 
@@ -42,11 +45,15 @@ public class TransactionTypeController {
             @PathVariable Long id,
             @RequestParam String transactionTypeName,
             RedirectAttributes redirectAttributes
-    ) {
-        try {
+    )
+    {
+        try
+        {
             transactionTypeService.updateTransactionType(id, transactionTypeName);
             redirectAttributes.addFlashAttribute("successMessage", "Типът транзакция е редактиран успешно.");
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             redirectAttributes.addFlashAttribute("errorMessage", getUserFriendlyErrorMessage(e, "update"));
         }
 

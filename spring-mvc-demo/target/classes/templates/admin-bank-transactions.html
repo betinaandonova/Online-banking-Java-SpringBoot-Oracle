@@ -38,7 +38,6 @@
                 <table class="styled-table table-extra-wide">
                     <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Employee</th>
                         <th>Type</th>
                         <th>Amount</th>
@@ -53,8 +52,6 @@
 
                     <tbody>
                     <tr th:each="transaction : ${bankTransactions}">
-
-                        <td th:text="${transaction.id}">1</td>
 
                         <td th:text="${transaction.employee != null ? transaction.employee.name + ' ' + transaction.employee.lastName : '-'}">
                             Ivan Ivanov

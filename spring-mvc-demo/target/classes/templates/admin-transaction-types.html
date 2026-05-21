@@ -44,7 +44,6 @@
             <table class="styled-table">
                 <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Transaction Type Name</th>
                     <th>Actions</th>
                 </tr>
@@ -52,8 +51,6 @@
 
                 <tbody>
                 <tr th:each="type : ${transactionTypes}">
-
-                    <td th:text="${type.id}">1</td>
 
                     <td>
                         <form th:action="@{/admin/transaction-types/update/{id}(id=${type.id})}"

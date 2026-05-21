@@ -44,7 +44,6 @@
             <table class="styled-table">
                 <thead>
                 <tr>
-                    <th>CURRENCY ID</th>
                     <th>Currency Short</th>
                     <th>Currency Name</th>
                     <th>Actions</th>
@@ -53,8 +52,6 @@
 
                 <tbody>
                 <tr th:each="c : ${currencies}">
-
-                    <td th:text="${c.id}">1</td>
 
                     <td th:text="${c.currencyShort}">BGN</td>
 

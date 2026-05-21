@@ -31,7 +31,6 @@
       <table class="styled-table">
         <thead>
         <tr>
-          <th>USER ID</th>
           <th>Username</th>
           <th>PASSWORD</th>
           <th>ACTIONS</th>
@@ -40,8 +39,7 @@
 
         <tbody>
         <tr th:each="u : ${users}">
-
-          <td th:text="${u.id}">1</td>
+          
 
           <td>
             <input type="text"
