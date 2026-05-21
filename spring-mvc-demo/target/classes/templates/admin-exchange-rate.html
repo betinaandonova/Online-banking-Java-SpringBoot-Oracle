@@ -48,8 +48,10 @@
 
                         <input type="date"
                                id="rateDate"
-                               name="rateDate">
-
+                               name="rateDate"
+                               th:attr="min=${#temporals.format(#temporals.createToday(), 'yyyy-MM-dd')}"
+                               required>
+                        
                         <button type="submit" class="btn add-btn">+ Add Exchange Rate</button>
                     </form>
                 </div>
@@ -61,7 +63,6 @@
                     <th>Currency</th>
                     <th>Rate to EUR</th>
                     <th>Rate Date</th>
-                    <th>Actions</th>
                 </tr>
                 </thead>
 
@@ -76,17 +77,6 @@
 
                     <td th:text="${rate.rateDate}">2026-01-01</td>
 
-                    <td class="action-buttons">
-                        <form th:action="@{/admin/exchange-rates/delete/{id}(id=${rate.id})}" method="post" class="delete-form">
-                            <button type="button"
-                                    class="btn delete-btn"
-                                    th:attr="data-delete-name=${rate.currency.currencyShort + ' - ' + rate.rateToEur}"
-                                    onclick="openDeleteModal(this)">
-                                Delete
-                            </button>
-                        </form>
-                    </td>
-
                 </tr>
                 </tbody>
             </table>
@@ -95,7 +85,6 @@
     </div>
 
     <div th:replace="~{fragments/error-popup :: popupMessages}"></div>
-    <div th:replace="~{fragments/confirm-delete-modal :: confirmDeleteModal}"></div>
 </main>
 
 <div class="footer"><p>© 2026 BSA Bank. All rights reserved.</p></div>
