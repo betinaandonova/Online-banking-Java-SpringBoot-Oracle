@@ -52,19 +52,8 @@
                 <tbody>
                 <tr th:each="type : ${transactionTypes}">
 
-                    <td>
-                        <form th:action="@{/admin/transaction-types/update/{id}(id=${type.id})}"
-                              method="post"
-                              class="add-inline-form">
-
-                            <input type="text"
-                                   name="transactionTypeName"
-                                   th:value="${type.transactionTypeName}"
-                                   maxlength="20"
-                                   required>
-
-                            <button type="submit" class="btn add-btn">Update</button>
-                        </form>
+                    <td th:text="${type.transactionTypeName}">
+                        Transaction Type Name
                     </td>
 
                     <td class="action-buttons">
